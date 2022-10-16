@@ -45,7 +45,7 @@ const JurnalUmunSchema = Schema(
       type: Number,
       required: true,
     },
-    Kredit: {
+    kredit: {
       type: Number,
       required: true,
     },
