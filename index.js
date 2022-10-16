@@ -2,6 +2,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
+const { entryPoint } = require("./src/helpers");
 const routers = require("./src/routers/index");
 
 // INIT
@@ -19,7 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // ROUTER
 routers(app);
-
+app.get("/", (req, res) => {
+  res.json(entryPoint());
+});
 // CONNECT MONGODB USING MONGOOSE
 mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,
