@@ -1,13 +1,13 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createPerkiraan,
   getAllPerkiraan,
   getPerkiraanByKode,
-} from "../controllers/perkiraan.controllers.js";
+} = require("../controllers/perkiraan.controllers");
 const router = express.Router();
 
 router.post("/", createPerkiraan);
 router.get("/", getAllPerkiraan);
 router.get("/:kode_perkiraan", getPerkiraanByKode);
 
-export default router;
+module.exports = router;

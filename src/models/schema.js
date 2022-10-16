@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const perkiraanSchema = Schema({
@@ -22,41 +22,41 @@ const perkiraanSchema = Schema({
   },
 });
 
-const JurnalUmunSchema = Schema({
-    nomerJurnal : {
-        type : String,
-        required: true
+const JurnalUmunSchema = Schema(
+  {
+    nomerJurnal: {
+      type: String,
+      required: true,
     },
-    tanggalJurna : Date,
-    uraian : {
-        type : String,
-        required: true
+    tanggalJurna: Date,
+    uraian: {
+      type: String,
+      required: true,
     },
-    kodePerkiraan : {
-        type : String,
-        required: true
+    kodePerkiraan: {
+      type: String,
+      required: true,
     },
-    NamaPerkiraanJurnal : {
-        type : String,
-        required: true
+    NamaPerkiraanJurnal: {
+      type: String,
+      required: true,
     },
-    debet : {
-        type : Number,
-        required: true
+    debet: {
+      type: Number,
+      required: true,
     },
-    Kredit : {
-        type : Number,
-        required: true
+    Kredit: {
+      type: Number,
+      required: true,
     },
-},  
-{ versionKey: false });
+  },
+  { versionKey: false }
+);
 
 perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
 
-
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmun", JurnalUmunSchema);
 
-export { Perkiraan, Jurnal };
-
+module.exports = { Perkiraan, Jurnal };
