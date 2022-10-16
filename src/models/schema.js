@@ -1,7 +1,28 @@
-var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/accounting");
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
-exports.JurnalUmunSchema = mongoose.model("jurnalUmun", {
+const perkiraanSchema = Schema({
+  kode_perkiraan: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  nama_perkiraan: {
+    type: String,
+    unique: true,
+  },
+  kelompok_akun: {
+    type: String,
+    required: true,
+  },
+  kelompok_laporan: {
+    type: String,
+    required: true,
+    default: "NERACA",
+  },
+});
+
+const JurnalUmunSchema = Schema({
     nomerJurnal : {
         type : String,
         required: true
@@ -26,6 +47,16 @@ exports.JurnalUmunSchema = mongoose.model("jurnalUmun", {
     Kredit : {
         type : Number,
         required: true
-    }
+    },
 },  
-{ versionKey: false })
+{ versionKey: false });
+
+perkiraanSchema.set("timestamps", true);
+JurnalUmunSchema.set("timestamp", true);
+
+
+const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
+const Jurnal = mongoose.model("jurnalUmun", JurnalUmunSchema);
+
+export { Perkiraan, Jurnal };
+

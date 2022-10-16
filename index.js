@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { routers } from "./src/routers/index.js";
 
+
 // INIT
 dotenv.config();
 const app = express();
@@ -12,7 +13,6 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true,
   })
 );
 app.use(express.json());
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 routers(app);
 
 // CONNECT MONGODB USING MONGOOSE
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

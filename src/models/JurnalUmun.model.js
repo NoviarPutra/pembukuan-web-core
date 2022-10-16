@@ -1,13 +1,28 @@
-var schema = require("./schema");
+import { Jurnal } from "./schema.js";
 
-exports.save = (data) => {
+export const insertJurnal = (data) => {
     return new Promise((resolve, reject) => {
-        new schema.JurnalUmunSchema(data).save((err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
+        Jurnal(data).save((err, result) => {
+            if(err) reject(err);
+            resolve(result)
         });
     });
-}
+};
+
+export const getAll = () => {
+    return new Promise((resolve, reject) => {
+      Jurnal.find((err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+  };
+
+  export const getByKode = (kode) => {
+    return new Promise((resolve, reject) => {
+      Jurnal.findOne(kode, (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+  };
