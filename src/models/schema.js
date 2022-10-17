@@ -33,6 +33,10 @@ const JurnalUmunSchema = Schema(
       type: String,
       required: true,
     },
+    nomerBukti : {
+      type : String,
+      require : true
+    },
     kodePerkiraan: {
       type: String,
       required: true,
