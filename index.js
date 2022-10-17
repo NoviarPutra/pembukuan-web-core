@@ -2,7 +2,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
-const { entryPoint } = require("./src/helpers");
 const routers = require("./src/routers/index");
 
 // INIT
