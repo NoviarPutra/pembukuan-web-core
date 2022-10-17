@@ -1,16 +1,30 @@
-const { success201, err400, success200, err404 } = require("../helpers");
+const { generateNumber } = require("../helpers/generate");
+const {
+  success201,
+  err400,
+  success200,
+  err404,
+} = require("../helpers/messages");
 const {
   insertJurnal,
   getByKode,
   getAll,
   updatedata,
 } = require("../models/JurnalUmun.model");
+const { getByName } = require("../models/perkiraan.models");
 const { Jurnal } = require("../models/schema");
 
 module.exports = {
   CreateJurnal: async (req, res) => {
     try {
-      // const { nomerJurnal, }
+      const check = await getByName({
+        nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
+      });
+      if (!check)
+        return res.status(404).json(err404("Nama Perkiraan tidak valid"));
+      req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
+      req.body.kodePerkiraan = check.kode_perkiraan;
+      req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
       const resp = await insertJurnal(req.body);
       return res.status(201).json(success201(resp));
     } catch (error) {

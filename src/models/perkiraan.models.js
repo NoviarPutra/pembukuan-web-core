@@ -25,6 +25,14 @@ module.exports = {
       });
     });
   },
+  getByName: (name) => {
+    return new Promise((resolve, reject) => {
+      Perkiraan.findOne(name, (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+  },
   search: (query, limit) => {
     return new Promise((resolve, reject) => {
       Perkiraan.find(query, (err, result) => {
