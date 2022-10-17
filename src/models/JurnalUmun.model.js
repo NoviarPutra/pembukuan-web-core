@@ -30,7 +30,7 @@ module.exports = {
 
   updatedata : (kode, data ) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findByIdAndUpdate(kode, data, (err, result) => {
+      Jurnal.findOneAndUpdate(kode, data, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -42,7 +42,7 @@ module.exports = {
 
   deletedata : (nomerJurnal) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findByIdAndRemove(nomerJurnal, (err, result) => {
+      Jurnal.findByOneAndRemove(nomerJurnal, (err, result) => {
         if (err) {
           reject(err);
         } else {

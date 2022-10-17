@@ -39,26 +39,26 @@ module.exports = {
 
     updatejurnal : async (req, res) => {
       try {
-        await updatedata.findOneAndUpdate({ kode: req.params.nomerJurnal }, req.body);
-        let update = await updatedata.findOne(
-          { kode: req.params.nomerJurnal },
-          { _id: 0 }
+        let update = await updatedata(
+          { nomerJurnal: req.params.nomerJurnal },
+          req.body
         );
-        return res.json(update);
+
+        if(update) return res.status(200).json(update);
+        return res.status(400).json("dalam try");
       } catch (error) {
-        return res.status(400).json(error);
+        return res.status(400).json("didalam catch");
       }
     },
 
     deletejurnal : async (req, res) => {
       try {
-        let hapus = await Jurnal.findOne({ kode: req.params.nomerJurnal });
-    
+        let hapus = await Jurnal.findOne({ nomerJurnal: req.params.nomerJurnal });
         if (!hapus) {
           return res.status(404).json({ message: "nomer jurnal tidak ditemukan." });
         }
     
-        await Jurnal.findOneAndRemove({ kode: hapus.nomerJurnal });
+        await Jurnal.findOneAndRemove({ nomerJurnal: hapus.nomerJurnal });
         return res.status(204).json({});
       } catch (error) {
         return res.status(400).json(error);
