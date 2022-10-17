@@ -27,4 +27,29 @@ module.exports = {
       });
     });
   },
+
+  updatedata : (kode, data ) => {
+    return new Promise((resolve, reject) => {
+      Jurnal.findByIdAndUpdate(kode, data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
+  deletedata : (nomerJurnal) => {
+    return new Promise((resolve, reject) => {
+      Jurnal.findByIdAndRemove(nomerJurnal, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
 };
+
