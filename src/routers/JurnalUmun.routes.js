@@ -1,7 +1,13 @@
 const express = require("express");
-const { CreateJurnal, getAlldata , getdatabykode, updatejurnal, deletejurnal} = require("../controllers/JurnalUmun.controller");
+const {
+  CreateJurnal,
+  getAlldata,
+  getdatabykode,
+  updatejurnal,
+  deletejurnal,
+} = require("../controllers/JurnalUmun.controller");
+const { validatejurnalBeforeCreate } = require("../middlewares");
 const router = express.Router();
-const { validatejurnalBeforeCreate } = require("../middlewares/validateJurnal");
 
 router.post("/", [validatejurnalBeforeCreate], CreateJurnal);
 router.get("/", getAlldata);
