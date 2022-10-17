@@ -15,9 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ROUTER
 routers(app);
-app.get("/", (req, res) => {
-  res.json(entryPoint());
-});
+
 // CONNECT MONGODB USING MONGOOSE
 mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,
