@@ -66,6 +66,51 @@ module.exports = {
           },
         },
       ],
+      JURNAL: [
+        {
+          METHOD: "GET",
+          getAll: {
+            URL: "http://localhost:3001/api/v1/jurnal",
+            payload: null,
+          },
+        },
+        {
+          METHOD: "POST",
+          createPerkiraan: {
+            URL: "http://localhost:3001/api/v1/jurnal",
+            payload: {
+              tanggalJurnal: "Date",
+              uraian: "String",
+              nomerBukti: "Number",
+              namaPerkiraanJurnal: "String",
+              debet: "Number",
+              kredit: "Number",
+            },
+            example: {
+              tanggalJurnal: "2022-10-16",
+              uraian: "kas untuk modal",
+              nomerBukti: 1,
+              namaPerkiraanJurnal: "kas",
+              debet: 1000000,
+              kredit: 0,
+            },
+            result: {
+              code: 201,
+              status: "CREATED",
+              data: {
+                tanggalJurnal: "2022-10-16T00:00:00.000Z",
+                uraian: "KAS UNTUK MODAL",
+                nomerBukti: "NB-0001",
+                kodePerkiraan: "101",
+                namaPerkiraanJurnal: "KAS",
+                debet: 1000000,
+                kredit: 0,
+                _id: "634dc7369618496f877a0654",
+              },
+            },
+          },
+        },
+      ],
     };
   },
 };
