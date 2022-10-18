@@ -1,10 +1,13 @@
 const { Jurnal, Perkiraan } = require("../models/schema");
 const { body, validationResult, param } = require("express-validator");
 const { err400 } = require("../helpers/messages");
+const { getByKode, getByName } = require("../models/perkiraan.models");
 
 module.exports = {
-  validateBeforeCreatePerkiraan: (req, res, next) => {
+  validateBeforeCreatePerkiraan: async (req, res, next) => {
     const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
+
+    // CHECK FIELD
     if (kode_perkiraan === "" || kode_perkiraan === undefined) {
       return res.status(400).json(err400("kode_perkiraan tidak boleh kosong"));
     } else if (nama_perkiraan === "" || nama_perkiraan === undefined) {
@@ -12,6 +15,17 @@ module.exports = {
     } else if (kelompok_akun === "" || kelompok_akun === undefined) {
       return res.status(400).json(err400("kelompok_akun tidak boleh kosong"));
     }
+
+    // CHECK KODE PERKIRAAN
+    const checkKode = await getByKode({ kode_perkiraan: kode_perkiraan });
+    if (checkKode) return res.status(400).json(err400("Kode sudah terdaftar"));
+
+    // CHECK NAMA PERKIRAAN
+    const checkNama = await getByName({
+      nama_perkiraan: nama_perkiraan.toUpperCase(),
+    });
+    if (checkNama) return res.status(400).json(err400("Nama sudah terfdatar"));
+
     next();
   },
   validatejurnalBeforeCreate: async (req, res, next) => {
