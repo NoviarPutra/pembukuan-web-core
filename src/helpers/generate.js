@@ -12,4 +12,8 @@ module.exports = {
     }
     return pattern;
   },
+  incrementNumber: (value) => {
+    if (value === undefined) return 1;
+    return value + 1;
+  },
 };
