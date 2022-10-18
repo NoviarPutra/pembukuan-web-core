@@ -19,7 +19,7 @@ module.exports = {
     });
   },
 
-  getByKode: (kode) => {
+  getByParams: (kode) => {
     return new Promise((resolve, reject) => {
       Jurnal.findOne(kode, (err, result) => {
         if (err) reject(err);

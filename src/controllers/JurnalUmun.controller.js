@@ -7,13 +7,12 @@ const {
 } = require("../helpers/messages");
 const {
   insertJurnal,
-  getByKode,
   getAll,
   updatedata,
   deletedata,
+  getByParams,
 } = require("../models/JurnalUmun.model");
 const { getByName } = require("../models/perkiraan.models");
-const { Jurnal } = require("../models/schema");
 
 module.exports = {
   CreateJurnal: async (req, res) => {
@@ -40,17 +39,30 @@ module.exports = {
       res.status(400).json(err400(error));
     }
   },
-
   getdatabykode: async (req, res) => {
     try {
       const id = req.params.kodePerkiraan;
-      const data = await getByKode({ kodePerkiraan: id });
+      const data = await getByParams({ kodePerkiraan: id });
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
     } catch (error) {
       return res.status(400).json(err400(error));
     }
   },
+  findDate: async (req, res) => {
+    try {
+      const { date } = req.params;
+      const rgxSearch = (pattern) => new RegExp(pattern);
+      const searchRgx = rgxSearch(date);
+      console.log(searchRgx);
+      const resp = await getByParams({ tanggalJurnal: searchRgx });
+      console.log(resp);
+    } catch (error) {
+      return res.status(400).json(err400(error));
+    }
+  },
+  findMonth: async (req, res) => {},
+  findYear: async (req, res) => {},
   updatejurnal: async (req, res) => {
     try {
       const check = await getByName({
@@ -71,11 +83,10 @@ module.exports = {
   },
   deletejurnal: async (req, res) => {
     try {
-      let hapus = await getByKode({ _id: req.params._id });
+      let hapus = await getByParams({ _id: req.params._id });
       if (!hapus) {
         return res.status(404).json(err404("nomer jurnal tidak ditemukan."));
       }
-
       await deletedata({ _id: req.params._id });
       return res.sendStatus(204);
     } catch (error) {
