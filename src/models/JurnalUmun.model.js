@@ -28,9 +28,9 @@ module.exports = {
     });
   },
 
-  updatedata : (kode, data ) => {
+  updatedata: (id, data) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findOneAndUpdate(kode, data, (err, result) => {
+      Jurnal.findOneAndUpdate(id, data, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -40,9 +40,9 @@ module.exports = {
     });
   },
 
-  deletedata : (nomerJurnal) => {
+  deletedata: (id) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findByOneAndRemove(nomerJurnal, (err, result) => {
+      Jurnal.findOneAndRemove(id, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -50,6 +50,5 @@ module.exports = {
         }
       });
     });
-  }
+  },
 };
-

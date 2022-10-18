@@ -5,11 +5,11 @@ const { err400 } = require("../helpers/messages");
 module.exports = {
   validateBeforeCreatePerkiraan: (req, res, next) => {
     const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
-    if (kode_perkiraan === "" || undefined) {
+    if (kode_perkiraan === "" || kode_perkiraan === undefined) {
       return res.status(400).json(err400("kode_perkiraan tidak boleh kosong"));
-    } else if (nama_perkiraan === "" || undefined) {
+    } else if (nama_perkiraan === "" || nama_perkiraan === undefined) {
       return res.status(400).json(err400("nama_perkiraan tidak boleh kosong"));
-    } else if (kelompok_akun === "" || undefined) {
+    } else if (kelompok_akun === "" || kelompok_akun === undefined) {
       return res.status(400).json(err400("kelompok_akun tidak boleh kosong"));
     }
     next();
@@ -93,5 +93,25 @@ module.exports = {
     }
 
     return res.status(400).json(err400(errors.array()));
+  },
+  validateJurnalBeforeUpdate: (req, res, next) => {
+    const { uraian, nomerBukti, namaPerkiraanJurnal, debet, kredit } = req.body;
+    if (uraian === "" || uraian === undefined) {
+      return res.status(400).json(err400("uraian tidak boleh kosong"));
+    } else if (nomerBukti === "" || nomerBukti === undefined) {
+      return res.status(400).json(err400("nomerBukti tidak boleh kosong"));
+    } else if (
+      namaPerkiraanJurnal === "" ||
+      namaPerkiraanJurnal === undefined
+    ) {
+      return res
+        .status(400)
+        .json(err400("namaPerkiraanJurnal tidak boleh kosong"));
+    } else if (debet === "" || debet === undefined) {
+      return res.status(400).json(err400("debet tidak boleh kosong"));
+    } else if (kredit === "" || kredit === undefined) {
+      return res.status(400).json(err400("kredit tidak boleh kosong"));
+    }
+    next();
   },
 };

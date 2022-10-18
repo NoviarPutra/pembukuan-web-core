@@ -10,6 +10,7 @@ const {
   getByKode,
   getAll,
   updatedata,
+  deletedata,
 } = require("../models/JurnalUmun.model");
 const { getByName } = require("../models/perkiraan.models");
 const { Jurnal } = require("../models/schema");
@@ -50,29 +51,33 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
-
   updatejurnal: async (req, res) => {
     try {
-      let update = await updatedata(
-        { nomerJurnal: req.params.nomerJurnal },
-        req.body
-      );
-      if (update) return res.status(200).json(success200(update));
-      return res.status(404).json(err404());
+      const check = await getByName({
+        nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
+      });
+      if (!check)
+        return res.status(404).json(err404("Nama Perkiraan tidak valid"));
+      req.body.uraian = req.body.uraian.toUpperCase();
+      req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
+      req.body.kodePerkiraan = check.kode_perkiraan;
+      req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+      let update = await updatedata({ _id: req.params._id }, req.body);
+      if (update) return res.status(200).json(success200(req.body));
+      return res.status(404).json(err404("ID tidak ditemukan"));
     } catch (error) {
       return res.status(400).json(err400(error));
     }
   },
-
   deletejurnal: async (req, res) => {
     try {
-      let hapus = await Jurnal.findOne({ nomerJurnal: req.params.nomerJurnal });
+      let hapus = await getByKode({ _id: req.params._id });
       if (!hapus) {
         return res.status(404).json(err404("nomer jurnal tidak ditemukan."));
       }
 
-      await Jurnal.findOneAndRemove({ nomerJurnal: hapus.nomerJurnal });
-      return res.status(204);
+      await deletedata({ _id: req.params._id });
+      return res.sendStatus(204);
     } catch (error) {
       return res.status(400).json(err400(error));
     }
