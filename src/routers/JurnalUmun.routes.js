@@ -12,14 +12,14 @@ const {
   validateJurnalBeforeUpdate,
 } = require("../middlewares");
 const router = express.Router();
-const { validatejurnalBeforeCreate , validatejurnalBeforeUpdate} = require("../middlewares/validateJurnal");
+// const { validatejurnalBeforeCreate , validatejurnalBeforeUpdate} = require("../middlewares/validateJurnal");
 
 
 
 router.post("/", [validatejurnalBeforeCreate], CreateJurnal);
 router.get("/", getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
-router.put("/:nomerJurnal", [validatejurnalBeforeUpdate], updatejurnal);
+// router.put("/:nomerJurnal", [validatejurnalBeforeUpdate], updatejurnal);
 router.delete("/:nomerJurnal", deletejurnal);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
 router.delete("/delete/:_id", deletejurnal);

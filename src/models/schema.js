@@ -62,8 +62,6 @@ const JurnalUmunSchema = Schema(
 
 const REFERENSI_TABEL = {
   JURNAL_UMUM: 'jurnal-umum',
-
-
 }
 
 const LabaRugiSchema = Schema(
@@ -81,9 +79,11 @@ const LabaRugiSchema = Schema(
 
 perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
+LabaRugiSchema.set("timesstamp", true);
 
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
+const Labarugi = mongoose.model("labarugi", LabaRugiSchema);
 
 
-module.exports = { Perkiraan, Jurnal, REFERENSI_TABEL, LabaRugi } ;
+module.exports = { Perkiraan, Jurnal, REFERENSI_TABEL, Labarugi } ;

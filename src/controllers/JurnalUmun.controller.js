@@ -1,8 +1,4 @@
-
-const { insertJurnal, getByKode, getAll, updatedata } = require("../models/JurnalUmun.model");
-const { Jurnal, REFERENSI_TABEL } = require("../models/schema");
-
-
+const { Jurnal, REFERENSI_TABEL,  } = require("../models/schema");
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
   success201,
@@ -117,7 +113,7 @@ module.exports = {
       return res.status(400).json(err400(error));
 
     }, 
-    
+
   findDate: async (req, res) => {
     try {
       const { date } = req.params;
