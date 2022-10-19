@@ -1,6 +1,6 @@
 const perkiraanRouter = require("./perkiraan.routes");
 const jurnalRouter = require("./JurnalUmun.routes");
-const { entryPoint } = require("../helpers");
+const { entryPoint } = require("../helpers/messages");
 
 module.exports = (app) => {
   app.use("/api/v1/perkiraan", perkiraanRouter);

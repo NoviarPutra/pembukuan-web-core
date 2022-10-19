@@ -25,33 +25,35 @@ const perkiraanSchema = Schema({
 const JurnalUmunSchema = Schema(
   {
     nomerJurnal: {
-      type: String,
+      type: Number,
       required: true,
     },
-    tanggalJurna: Date,
+    tanggalJurnal: Date,
     uraian: {
       type: String,
       required: true,
     },
-    nomerBukti : {
-      type : String,
-      require : true
+    nomerBukti: {
+      type: String,
+      require: true,
     },
     kodePerkiraan: {
       type: String,
       required: true,
     },
-    NamaPerkiraanJurnal: {
+    namaPerkiraanJurnal: {
       type: String,
       required: true,
     },
     debet: {
       type: Number,
       required: true,
+      default: 0,
     },
     kredit: {
       type: Number,
       required: true,
+      default: 0,
     },
   },
   { versionKey: false }
@@ -81,7 +83,7 @@ perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
 
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
-const Jurnal = mongoose.model("jurnalUmun", JurnalUmunSchema);
-const LabaRugi = mongoose.model("LabaRugi", LabaRugiSchema)
+const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
+
 
 module.exports = { Perkiraan, Jurnal, REFERENSI_TABEL, LabaRugi } ;

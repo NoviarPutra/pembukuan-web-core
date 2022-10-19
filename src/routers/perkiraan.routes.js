@@ -14,7 +14,11 @@ router.post("/", [validateBeforeCreatePerkiraan], createPerkiraan);
 router.get("/", getAllPerkiraan);
 router.get("/search", seacrhPerkiraan);
 router.get("/:kode_perkiraan", getPerkiraanByKode);
-router.put("/:kode_perkiraan", updatePerkiraan);
+router.put(
+  "/:kode_perkiraan",
+  [validateBeforeCreatePerkiraan],
+  updatePerkiraan
+);
 router.delete("/delete/:kode_perkiraan", removePerkiraan);
 
 module.exports = router;
