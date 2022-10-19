@@ -7,12 +7,6 @@ module.exports = {
   validateBeforeCreatePerkiraan: async (req, res, next) => {
     const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
 
-    // CHECK LIMIT KODE PERKIRAAN
-    if (kode_perkiraan >= 800)
-      return res
-        .status(400)
-        .json(err400("Pengkelompokan kode_perkiraan hanya sampai sampai 7"));
-
     // CHECK FIELD
     if (kode_perkiraan === "" || kode_perkiraan === undefined) {
       return res.status(400).json(err400("kode_perkiraan tidak boleh kosong"));

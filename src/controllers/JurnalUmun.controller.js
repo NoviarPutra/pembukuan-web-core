@@ -1,4 +1,4 @@
-const { generateNumber, incrementNumber } = require("../helpers/generate");
+const { generateNumber } = require("../helpers/generate");
 const {
   success201,
   err400,
@@ -17,35 +17,16 @@ const { getByName } = require("../models/perkiraan.models");
 module.exports = {
   CreateJurnal: async (req, res) => {
     try {
-      let num;
-      // CHECK NAMA PERKIRAAN
       const check = await getByName({
         nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
       });
       if (!check)
         return res.status(404).json(err404("Nama Perkiraan tidak valid"));
-
-      // CHECK NOMOR JURNAL
-      const checkNomer = await getAll();
-      if (checkNomer[0] === undefined) {
-        req.body.nomerJurnal = incrementNumber(checkNomer[0]);
-        req.body.namaPerkiraanJurnal =
-          req.body.namaPerkiraanJurnal.toUpperCase();
-        req.body.kodePerkiraan = check.kode_perkiraan;
-        req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
-        const resp = await insertJurnal(req.body);
-        return res.status(201).json(success201(resp));
-      } else {
-        checkNomer.reverse();
-        num = incrementNumber(checkNomer[0].nomerJurnal);
-        req.body.nomerJurnal = num;
-        req.body.namaPerkiraanJurnal =
-          req.body.namaPerkiraanJurnal.toUpperCase();
-        req.body.kodePerkiraan = check.kode_perkiraan;
-        req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
-        const resp = await insertJurnal(req.body);
-        return res.status(201).json(success201(resp));
-      }
+      req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
+      req.body.kodePerkiraan = check.kode_perkiraan;
+      req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+      const resp = await insertJurnal(req.body);
+      return res.status(201).json(success201(resp));
     } catch (error) {
       return res.status(400).json(err400(error));
     }
