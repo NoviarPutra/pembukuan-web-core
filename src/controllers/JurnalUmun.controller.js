@@ -1,13 +1,15 @@
 const { insertJurnal, getByKode, getAll, updatedata } = require("../models/JurnalUmun.model");
-const { Jurnal } = require("../models/schema");
-
-
+const { Jurnal, REFERENSI_TABEL } = require("../models/schema");
 
 
 module.exports = {
   CreateJurnal:  async (req, res) => {
     try {
       // const { nomerJurnal, }
+      // create jurnal sampe selesai
+      // setelah selesai, panggil model laba rugi
+      // buat laba rugi sesuai jurnal... save, kelar.
+      
       const resp = await insertJurnal(req.body);
       return res
         .status(201)
@@ -45,9 +47,9 @@ module.exports = {
         );
 
         if(update) return res.status(200).json(update);
-        return res.status(400).json("dalam try");
+        return res.status(400).json(error);
       } catch (error) {
-        return res.status(400).json("didalam catch");
+        return res.status(400).json(error);
       }
     },
 

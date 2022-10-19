@@ -57,10 +57,31 @@ const JurnalUmunSchema = Schema(
   { versionKey: false }
 );
 
+
+const REFERENSI_TABEL = {
+  JURNAL_UMUM: 'jurnal-umum',
+
+
+}
+
+const LabaRugiSchema = Schema(
+  {
+    tanggalLabaRugi : Date,
+    kodePerkiraan : String,
+    kodeRefensi : String,
+    jenisReferensi : String,
+    lbDebet : Number,
+    lbKredit : Number
+
+  }
+)
+
+
 perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
 
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmun", JurnalUmunSchema);
+const LabaRugi = mongoose.model("LabaRugi", LabaRugiSchema)
 
-module.exports = { Perkiraan, Jurnal };
+module.exports = { Perkiraan, Jurnal, REFERENSI_TABEL, LabaRugi } ;

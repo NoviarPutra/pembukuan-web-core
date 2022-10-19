@@ -1,4 +1,10 @@
-const { Jurnal } = require("./schema");
+const { Jurnal, LabaRugi } = require("./schema");
+
+// {
+//   "nomorReferensi": "8080",
+//   "referensi": 
+// }
+// new LabaRugi(data)
 
 module.exports = {
   insertJurnal: (data) => {
