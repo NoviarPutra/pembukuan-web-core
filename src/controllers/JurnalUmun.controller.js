@@ -1,4 +1,4 @@
-const { Jurnal, REFERENSI_TABEL,  } = require("../models/schema");
+const { Jurnal } = require("../models/schema");
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
   success201,

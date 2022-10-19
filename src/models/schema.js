@@ -60,16 +60,10 @@ const JurnalUmunSchema = Schema(
 );
 
 
-const REFERENSI_TABEL = {
-  JURNAL_UMUM: 'jurnal-umum',
-}
-
 const LabaRugiSchema = Schema(
   {
     tanggalLabaRugi : Date,
     kodePerkiraan : String,
-    kodeRefensi : String,
-    jenisReferensi : String,
     lbDebet : Number,
     lbKredit : Number
 
@@ -86,4 +80,4 @@ const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
 const Labarugi = mongoose.model("labarugi", LabaRugiSchema);
 
 
-module.exports = { Perkiraan, Jurnal, REFERENSI_TABEL, Labarugi } ;
+module.exports = { Perkiraan, Jurnal, Labarugi } ;

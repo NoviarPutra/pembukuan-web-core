@@ -1,4 +1,4 @@
-const { Jurnal } = require("./schema");
+const { Labarugi } = require("./schema");
 
 // {
 //   "nomorReferensi": "8080",
@@ -7,9 +7,9 @@ const { Jurnal } = require("./schema");
 // new LabaRugi(data)
 
 module.exports = {
-  insertJurnal: (data) => {
+  insertlabarugi: (data) => {
     return new Promise((resolve, reject) => {
-      Jurnal(data).save((err, result) => {
+      Labarugi(data).save((err, result) => {
         if (err) reject(err);
         resolve(result);
       });
@@ -18,7 +18,7 @@ module.exports = {
 
   getAll: () => {
     return new Promise((resolve, reject) => {
-      Jurnal.find((err, result) => {
+      Labarugi.find((err, result) => {
         if (err) reject(err);
         resolve(result);
       });
@@ -27,7 +27,7 @@ module.exports = {
 
   getByParams: (kode) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findOne(kode, (err, result) => {
+      Labarugi.findOne(kode, (err, result) => {
         if (err) reject(err);
         resolve(result);
       });
@@ -36,7 +36,7 @@ module.exports = {
 
   updatedata: (id, data) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findOneAndUpdate(id, data, (err, result) => {
+      Labarugi.findOneAndUpdate(id, data, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -48,7 +48,7 @@ module.exports = {
 
   deletedata: (id) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findOneAndRemove(id, (err, result) => {
+      Labarugi.findOneAndRemove(id, (err, result) => {
         if (err) {
           reject(err);
         } else {
