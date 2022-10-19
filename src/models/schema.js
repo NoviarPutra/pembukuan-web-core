@@ -24,6 +24,10 @@ const perkiraanSchema = Schema({
 
 const JurnalUmunSchema = Schema(
   {
+    nomerJurnal: {
+      type: Number,
+      required: true,
+    },
     tanggalJurnal: Date,
     uraian: {
       type: String,
