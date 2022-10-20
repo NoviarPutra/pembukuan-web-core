@@ -64,6 +64,7 @@ module.exports = {
   getdatabykode: async (req, res) => {
     try {
       const id = req.params.kodePerkiraan;
+      console.log(id);
       const data = await getByParams({ kodePerkiraan: id });
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
@@ -73,12 +74,14 @@ module.exports = {
   },
   findDate: async (req, res) => {
     try {
-      const { date } = req.params;
-      const rgxSearch = (pattern) => new RegExp(pattern);
-      const searchRgx = rgxSearch(date);
-      console.log(searchRgx);
-      const resp = await getByParams({ tanggalJurnal: searchRgx });
-      console.log(resp);
+      const date = req.params.date;
+      // date.getDate()
+      const data = await getAll({tanggalJurnal : date});
+    if(data) return res.status(200).json(success200(data))
+
+      console.log("menampilkan tanggal", date)
+      // const data = await getByParams({})
+
     } catch (error) {
       return res.status(400).json(err400(error));
     }
@@ -95,7 +98,7 @@ module.exports = {
       req.body.uraian = req.body.uraian.toUpperCase();
       req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
       req.body.kodePerkiraan = check.kode_perkiraan;
-      req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+      req.body.nomerBukti = generateNumber(req.body.nomerBukti);
       let update = await updatedata({ _id: req.params._id }, req.body);
       if (update) return res.status(200).json(success200(req.body));
       return res.status(404).json(err404("ID tidak ditemukan"));

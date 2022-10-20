@@ -15,7 +15,7 @@ const {
 } = require("../middlewares");
 const router = express.Router();
 
-router.post("/", [validatejurnalBeforeCreate], CreateJurnal, createLabarugi );
+router.post("/", [validatejurnalBeforeCreate],  CreateJurnal ,createLabarugi );
 router.get("/", getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
