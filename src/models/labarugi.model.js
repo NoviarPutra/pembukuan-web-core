@@ -9,14 +9,14 @@ const { Labarugi } = require("./schema");
 module.exports = {
   insertlabarugi: (data) => {
     return new Promise((resolve, reject) => {
-      Labarugi(data).save((err, result) => {
-        if (err) reject(err);
-        resolve(result);
+        Labarugi(data).save((err, result) => {
+          if (err) reject(err);
+          resolve(result);
+        });
       });
-    });
   },
 
-  getAll: () => {
+  getAllLabarugi: () => {
     return new Promise((resolve, reject) => {
       Labarugi.find((err, result) => {
         if (err) reject(err);

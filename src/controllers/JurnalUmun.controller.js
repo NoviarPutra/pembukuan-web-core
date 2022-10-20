@@ -1,5 +1,6 @@
 
 const { Jurnal } = require("../models/schema");
+const { insertlabarugi } = require("../models/labarugi.model")
 
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
@@ -16,6 +17,8 @@ const {
   getByParams,
 } = require("../models/JurnalUmun.model");
 const { getByName } = require("../models/perkiraan.models");
+
+const listLabarugi = ["705", "707", "702", "701", "703", "704", "706", "709"];
 
 module.exports = {
   CreateJurnal: async (req, res) => {
@@ -36,6 +39,21 @@ module.exports = {
           req.body.namaPerkiraanJurnal.toUpperCase();
         req.body.kodePerkiraan = check.kode_perkiraan;
         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+        console.log(req.body)
+        if(listLabarugi.find(val => val == req.body.kodePerkiraan)) {
+              try {
+                  const resp = await insertlabarugi({
+                      tanggalLabaRugi : req.body.tanggalJurnal,
+                      kodePerkiraan : req.body.kodePerkiraan,
+                      lbDebet : req.body.debet,
+                      lbKredit : req.body.kredit
+                      });
+                  return res.status(201).json(success201(resp));
+              } catch (error) {
+                  return res.status(400).json(err400(error));
+                  }
+        }
+
         const resp = await insertJurnal(req.body);
         return res.status(201).json(success201(resp));
       } else {
@@ -46,6 +64,21 @@ module.exports = {
           req.body.namaPerkiraanJurnal.toUpperCase();
         req.body.kodePerkiraan = check.kode_perkiraan;
         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+
+        console.log(req.body)
+        if(listLabarugi.find(val => val == req.body.kodePerkiraan)) {
+          try {
+              const resp = await insertlabarugi({
+                  tanggalLabaRugi : req.body.tanggalJurnal,
+                  kodePerkiraan : req.body.kodePerkiraan,
+                  lbDebet : req.body.debet,
+                  lbKredit : req.body.kredit
+                  });
+              return res.status(201).json(success201(resp));
+          } catch (error) {
+              return res.status(400).json(err400(error));
+              }
+    }
         const resp = await insertJurnal(req.body);
         return res.status(201).json(success201(resp));
       }
@@ -63,9 +96,9 @@ module.exports = {
   },
   getdatabykode: async (req, res) => {
     try {
-      const id = req.params.kodePerkiraan;
+      const id = req.params.nomerBukti;
       console.log(id);
-      const data = await getByParams({ kodePerkiraan: id });
+      const data = await getByParams({ nomerBukti: id });
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
     } catch (error) {
