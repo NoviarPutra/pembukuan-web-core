@@ -8,15 +8,16 @@ const {
   findDate,
 } = require("../controllers/JurnalUmun.controller");
 
-const { createLabarugi } = require("../controllers/labarugi.controller")
+const { createLabarugi } = require("../controllers/labarugi.controller");
 const {
   validatejurnalBeforeCreate,
   validateJurnalBeforeUpdate,
+  aggregateDebetKredit,
 } = require("../middlewares");
 const router = express.Router();
 
-router.post("/", [validatejurnalBeforeCreate],  CreateJurnal ,createLabarugi );
-router.get("/", getAlldata);
+router.post("/", [validatejurnalBeforeCreate], CreateJurnal, createLabarugi);
+router.get("/", [aggregateDebetKredit], getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
 router.delete("/delete/:_id", deletejurnal);

@@ -1,4 +1,3 @@
-
 const { Jurnal } = require("../models/schema");
 
 const { generateNumber, incrementNumber } = require("../helpers/generate");
@@ -55,8 +54,17 @@ module.exports = {
   },
   getAlldata: async (req, res) => {
     try {
+      const { totalDebet, totalKredit } = req.body;
       const data = await getAll();
-      return res.status(200).json(success200(data));
+      return res
+        .status(200)
+        .json({
+          code: 200,
+          status: "OK",
+          data: data,
+          totalDebet: totalDebet,
+          totalKredit: totalKredit,
+        });
     } catch (error) {
       res.status(400).json(err400(error));
     }
@@ -76,12 +84,11 @@ module.exports = {
     try {
       const date = req.params.date;
       // date.getDate()
-      const data = await getAll({tanggalJurnal : date});
-    if(data) return res.status(200).json(success200(data))
+      const data = await getAll({ tanggalJurnal: date });
+      if (data) return res.status(200).json(success200(data));
 
-      console.log("menampilkan tanggal", date)
+      console.log("menampilkan tanggal", date);
       // const data = await getByParams({})
-
     } catch (error) {
       return res.status(400).json(err400(error));
     }
