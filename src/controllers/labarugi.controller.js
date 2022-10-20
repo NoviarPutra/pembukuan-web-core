@@ -1,20 +1,34 @@
 const { insertlabarugi } = require("../models/labarugi.model");
+const {getAll } = require("../models/JurnalUmun.model");
+const { getByName } = require("../models/perkiraan.models");
 const { Labarugi } = require("../models/schema");
-
+const {
+    success201,
+    err400,
+    success200,
+    err404,
+  } = require("../helpers/messages");
 const listLabarugi = ["705", "707", "702"];
 
 module.exports = {
     createLabarugi : async (req, res) => {
         try {
+        const check = await getByName({
+            nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
+            });
+        if (!check)
+            return res.status(404).json(err404("Nama Perkiraan tidak valid"));
+        
         const checkNomer = await getAll();
             if (checkNomer[0] === undefined) {
                 req.body.kodePerkiraan = check.kode_perkiraan;
-                if(req.body.kodePerkiraan == listLabarugi) {
-                    const {tanggalJurnal, debet, kredit} = req.body;
+                if(req.body.kodePerkiraan == listLabarugi[0]) {
+                    // const {tanggalJurnal, debet, kredit} = req.body;
                     const resp = await insertlabarugi({
-                        tanggalLabaRugi : tanggalJurnal,
-                        lbDebet : debet,
-                        lbKredit : kredit
+                        tanggalLabaRugi : req.body.tanggalJurnal,
+                        kodePerkiraan : req.body.kodePerkiraan,
+                        lbDebet : req.body.debet,
+                        lbKredit : req.body.kredit
                     });
                     return res.status(201).json(success201(resp));
                 }
