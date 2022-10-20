@@ -60,6 +60,7 @@ const JurnalUmunSchema = Schema(
 );
 
 
+
 const LabaRugiSchema = Schema(
   {
     tanggalLabaRugi : Date,
@@ -71,13 +72,15 @@ const LabaRugiSchema = Schema(
 )
 
 
+
+
 perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
-LabaRugiSchema.set("timesstamp", true);
+LabaRugiSchema.set("timestamp", true);
 
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
-const Labarugi = mongoose.model("labarugi", LabaRugiSchema);
+const Labarugi = mongoose.model("Labarugi", LabaRugiSchema);
 
 
 module.exports = { Perkiraan, Jurnal, Labarugi } ;

@@ -1,4 +1,6 @@
+
 const { Jurnal } = require("../models/schema");
+
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
   success201,
@@ -15,21 +17,9 @@ const {
 } = require("../models/JurnalUmun.model");
 const { getByName } = require("../models/perkiraan.models");
 
-
 module.exports = {
   CreateJurnal: async (req, res) => {
     try {
-
-      // const { nomerJurnal, }
-      // create jurnal sampe selesai
-      // setelah selesai, panggil model laba rugi
-      // buat laba rugi sesuai jurnal... save, kelar.
-      
-      const resp = await insertJurnal(req.body);
-      return res
-        .status(201)
-        .json({ code: 201, message: "CREATED", data: resp });
-
       let num;
       // CHECK NAMA PERKIRAAN
       const check = await getByName({
@@ -59,7 +49,6 @@ module.exports = {
         const resp = await insertJurnal(req.body);
         return res.status(201).json(success201(resp));
       }
-
     } catch (error) {
       return res.status(400).json(err400(error));
     }
@@ -79,41 +68,9 @@ module.exports = {
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
     } catch (error) {
-
-      return res.status(400).json({ code: 400, message: error });
-    } },
-
-    updatejurnal : async (req, res) => {
-      try {
-        let update = await updatedata(
-          { nomerJurnal: req.params.nomerJurnal },
-          req.body
-        );
-
-        if(update) return res.status(200).json(update);
-        return res.status(400).json(error);
-      } catch (error) {
-        return res.status(400).json(error);
-      }
-    },
-
-    deletejurnal : async (req, res) => {
-      try {
-        let hapus = await Jurnal.findOne({ nomerJurnal: req.params.nomerJurnal });
-        if (!hapus) {
-          return res.status(404).json({ message: "nomer jurnal tidak ditemukan." });
-        }
-    
-        await Jurnal.findOneAndRemove({ nomerJurnal: hapus.nomerJurnal });
-        return res.status(204).json({});
-      } catch (error) {
-        return res.status(400).json(error);
-      }
-
       return res.status(400).json(err400(error));
-
-    }, 
-
+    }
+  },
   findDate: async (req, res) => {
     try {
       const { date } = req.params;
@@ -126,7 +83,6 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
- 
   findMonth: async (req, res) => {},
   findYear: async (req, res) => {},
   updatejurnal: async (req, res) => {
@@ -147,7 +103,7 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
-  deletejurnal : async (req, res) => {
+  deletejurnal: async (req, res) => {
     try {
       let hapus = await getByParams({ _id: req.params._id });
       if (!hapus) {
