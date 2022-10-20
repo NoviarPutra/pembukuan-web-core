@@ -16,12 +16,8 @@ const {
 module.exports = {
   createPerkiraan: async (req, res) => {
     try {
-      const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
-      const resp = await insertPerkiraan({
-        kode_perkiraan: kode_perkiraan,
-        nama_perkiraan: nama_perkiraan.toUpperCase(),
-        kelompok_akun: kelompok_akun.toUpperCase(),
-      });
+      console.log(req.body);
+      const resp = await insertPerkiraan(req.body);
       if (resp) return res.status(201).json(success201());
       return res.status(400).json(err400("Something went wrong"));
     } catch (error) {

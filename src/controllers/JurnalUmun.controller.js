@@ -1,4 +1,3 @@
-
 const { Jurnal } = require("../models/schema");
 const { insertlabarugi } = require("../models/labarugi.model")
 
@@ -88,8 +87,15 @@ module.exports = {
   },
   getAlldata: async (req, res) => {
     try {
+      const { totalDebet, totalKredit } = req.body;
       const data = await getAll();
-      return res.status(200).json(success200(data));
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        data: data,
+        totalDebet: totalDebet,
+        totalKredit: totalKredit,
+      });
     } catch (error) {
       res.status(400).json(err400(error));
     }
@@ -107,20 +113,77 @@ module.exports = {
   },
   findDate: async (req, res) => {
     try {
-      const date = req.params.date;
-      // date.getDate()
-      const data = await getAll({tanggalJurnal : date});
-    if(data) return res.status(200).json(success200(data))
-
-      console.log("menampilkan tanggal", date)
-      // const data = await getByParams({})
-
+      // const { totalDebet, totalKredit } = req.body;
+      const { tahun, bulan, hari } = req.params;
+      const resp = await Jurnal.find({
+        tanggalJurnal: {
+          $gte: `${tahun}-${bulan}-${hari}`,
+          $lte: `${tahun}-${bulan}-${hari}`,
+        },
+      });
+      // const resp = await Jurnal.aggregate();
+      if (resp[0])
+        return res.status(200).json({
+          code: 200,
+          status: "OK",
+          data: resp,
+        });
+      return res
+        .status(400)
+        .json(err400("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
+      // totalDebet: totalDebet,
+      // totalKredit: totalKredit,
     } catch (error) {
       return res.status(400).json(err400(error));
     }
   },
-  findMonth: async (req, res) => {},
-  findYear: async (req, res) => {},
+  findMonth: async (req, res) => {
+    try {
+      // const { totalDebet, totalKredit } = req.body;
+      const { tahun, bulan } = req.params;
+      const resp = await Jurnal.find({
+        tanggalJurnal: {
+          $gte: `${tahun}-${bulan}-01`,
+          $lte: `${tahun}-${bulan}-31`,
+        },
+      });
+      // const resp = await Jurnal.aggregate();
+      if (resp[0])
+        return res.status(200).json({
+          code: 200,
+          status: "OK",
+          data: resp,
+        });
+      return res
+        .status(400)
+        .json(err400("Tahun / Bulan yang dicari kaga ada bang "));
+      // totalDebet: totalDebet,
+      // totalKredit: totalKredit,
+    } catch (error) {
+      return res.status(400).json(err400(error));
+    }
+  },
+  findYear: async (req, res) => {
+    try {
+      // const { totalDebet, totalKredit } = req.body;
+      const { tahun } = req.params;
+      const resp = await Jurnal.find({
+        tanggalJurnal: { $gte: `${tahun}-01-01`, $lte: `${tahun}-12-31` },
+      });
+      // const resp = await Jurnal.aggregate();
+      if (resp[0])
+        return res.status(200).json({
+          code: 200,
+          status: "OK",
+          data: resp,
+        });
+      return res.status(400).json(err400("Tahun yang dicari kaga ada bang "));
+      // totalDebet: totalDebet,
+      // totalKredit: totalKredit,
+    } catch (error) {
+      return res.status(400).json(err400(error));
+    }
+  },
   updatejurnal: async (req, res) => {
     try {
       const check = await getByName({

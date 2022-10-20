@@ -31,11 +31,10 @@ module.exports = {
       nama_perkiraan: nama_perkiraan.toUpperCase(),
     });
     if (checkNama) return res.status(400).json(err400("Nama sudah terfdatar"));
-
+    req.body.nama_perkiraan = nama_perkiraan.toUpperCase();
+    req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
-
-
   validatejurnalBeforeCreate: async (req, res, next) => {
     let validators = [
       body("tanggalJurnal")
@@ -116,7 +115,6 @@ module.exports = {
 
     return res.status(400).json(err400(errors.array()));
   },
-  
   validateJurnalBeforeUpdate: (req, res, next) => {
     const { uraian, nomerBukti, namaPerkiraanJurnal, debet, kredit } = req.body;
     if (uraian === "" || uraian === undefined) {
@@ -136,5 +134,27 @@ module.exports = {
       return res.status(400).json(err400("kredit tidak boleh kosong"));
     }
     next();
+  },
+  aggregateDebetKredit: async (req, res, next) => {
+    try {
+      const resp = await Jurnal.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
