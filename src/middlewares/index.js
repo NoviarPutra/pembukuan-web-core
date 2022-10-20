@@ -35,6 +35,8 @@ module.exports = {
     req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
+
+
   validatejurnalBeforeCreate: async (req, res, next) => {
     let validators = [
       body("tanggalJurnal")
@@ -115,6 +117,7 @@ module.exports = {
 
     return res.status(400).json(err400(errors.array()));
   },
+  
   validateJurnalBeforeUpdate: (req, res, next) => {
     const { uraian, nomerBukti, namaPerkiraanJurnal, debet, kredit } = req.body;
     if (uraian === "" || uraian === undefined) {

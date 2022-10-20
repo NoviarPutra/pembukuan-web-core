@@ -7,13 +7,15 @@ const {
   deletejurnal,
   findDate,
 } = require("../controllers/JurnalUmun.controller");
+
+const { createLabarugi } = require("../controllers/labarugi.controller")
 const {
   validatejurnalBeforeCreate,
   validateJurnalBeforeUpdate,
 } = require("../middlewares");
 const router = express.Router();
 
-router.post("/", [validatejurnalBeforeCreate], CreateJurnal);
+router.post("/", [validatejurnalBeforeCreate], CreateJurnal, createLabarugi );
 router.get("/", getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);

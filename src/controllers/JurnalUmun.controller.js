@@ -1,3 +1,6 @@
+
+const { Jurnal } = require("../models/schema");
+
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
   success201,
