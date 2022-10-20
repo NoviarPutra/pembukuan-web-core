@@ -6,6 +6,8 @@ const {
   updatejurnal,
   deletejurnal,
   findDate,
+  findYear,
+  findMonth,
 } = require("../controllers/JurnalUmun.controller");
 
 const { createLabarugi } = require("../controllers/labarugi.controller");
@@ -21,8 +23,9 @@ router.get("/", [aggregateDebetKredit], getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
 router.delete("/delete/:_id", deletejurnal);
-router.get("/search/tanggal/:date", findDate);
-router.get("/search/bulan/:bulan");
-router.get("/search/tahun/:tahun");
+// router.get("/search/tanggal/:date", findDate);
+router.get("/search/:tahun", findYear);
+router.get("/search/:tahun/:bulan", findMonth);
+router.get("/search/:tahun/:bulan/:hari", findDate);
 
 module.exports = router;
