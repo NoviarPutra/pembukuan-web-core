@@ -15,6 +15,9 @@ const {
   validatejurnalBeforeCreate,
   validateJurnalBeforeUpdate,
   aggregateDebetKredit,
+  aggregateForYear,
+  aggregateForMonth,
+  aggregateForDate,
 } = require("../middlewares");
 const router = express.Router();
 
@@ -23,9 +26,8 @@ router.get("/", [aggregateDebetKredit], getAlldata);
 router.get("/:kodePerkiraan", getdatabykode);
 router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
 router.delete("/delete/:_id", deletejurnal);
-// router.get("/search/tanggal/:date", findDate);
-router.get("/search/:tahun", findYear);
-router.get("/search/:tahun/:bulan", findMonth);
-router.get("/search/:tahun/:bulan/:hari", findDate);
+router.get("/search/:tahun", [aggregateForYear], findYear);
+router.get("/search/:tahun/:bulan", [aggregateForMonth], findMonth);
+router.get("/search/:tahun/:bulan/:hari", [aggregateForDate], findDate);
 
 module.exports = router;

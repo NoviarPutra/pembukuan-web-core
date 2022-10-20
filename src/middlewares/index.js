@@ -1,5 +1,5 @@
-const { Jurnal, Perkiraan } = require("../models/schema");
-const { body, validationResult, param } = require("express-validator");
+const { Jurnal } = require("../models/schema");
+const { body, validationResult } = require("express-validator");
 const { err400 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
 
@@ -138,6 +138,96 @@ module.exports = {
   aggregateDebetKredit: async (req, res, next) => {
     try {
       const resp = await Jurnal.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  aggregateForYear: async (req, res, next) => {
+    try {
+      const { tahun } = req.params;
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            tanggalJurnal: {
+              $gte: new Date(`${tahun}-01-01`),
+              $lte: new Date(`${tahun}-12-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  aggregateForMonth: async (req, res, next) => {
+    try {
+      const { tahun, bulan } = req.params;
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            tanggalJurnal: {
+              $gte: new Date(`${tahun}-${bulan}-01`),
+              $lte: new Date(`${tahun}-${bulan}-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  aggregateForDate: async (req, res, next) => {
+    try {
+      const { tahun, bulan, hari } = req.params;
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
+          },
+        },
         {
           $group: {
             _id: null,
