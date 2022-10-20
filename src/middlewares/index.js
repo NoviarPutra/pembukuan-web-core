@@ -31,7 +31,8 @@ module.exports = {
       nama_perkiraan: nama_perkiraan.toUpperCase(),
     });
     if (checkNama) return res.status(400).json(err400("Nama sudah terfdatar"));
-
+    req.body.nama_perkiraan = nama_perkiraan.toUpperCase();
+    req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
   validatejurnalBeforeCreate: async (req, res, next) => {
