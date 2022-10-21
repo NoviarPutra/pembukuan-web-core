@@ -25,7 +25,7 @@ module.exports = {
     });
   },
 
-  getByParams: (kode) => {
+  getByParamsLabarugi: (kode) => {
     return new Promise((resolve, reject) => {
       Labarugi.findOne(kode, (err, result) => {
         if (err) reject(err);
@@ -34,9 +34,9 @@ module.exports = {
     });
   },
 
-  updatedata: (id, data) => {
+  updatedatalabarugi: (kodePerkiraan, data) => {
     return new Promise((resolve, reject) => {
-      Labarugi.findOneAndUpdate(id, data, (err, result) => {
+      Labarugi.findOneAndUpdate(kodePerkiraan, data, (err, result) => {
         if (err) {
           reject(err);
         } else {

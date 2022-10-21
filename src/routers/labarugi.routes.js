@@ -2,13 +2,16 @@ const express = require("express");
 const { createLabarugi, getAlldata, findDate, findMonth, findYear } = require("../controllers/labarugi.controller")
 
 const {
-    aggregateDebetKreditSaldo
+    aggregateDebetKreditSaldo,
+    aggregateForDateLabarugi,
+    aggregateForYearLabarugi,
+    aggregateForMonthLabarugi
   } = require("../middlewares");
 const router = express.Router();  
 
 router.get("/",[aggregateDebetKreditSaldo], getAlldata);
-router.get("/search/:tahun", findYear);
-router.get("/search/:tahun/:bulan", findMonth);
-router.get("/search/:tahun/:bulan/:hari", findDate);
+router.get("/search/:tahun",[aggregateForYearLabarugi], findYear);
+router.get("/search/:tahun/:bulan",[aggregateForMonthLabarugi], findMonth);
+router.get("/search/:tahun/:bulan/:hari",[aggregateForDateLabarugi], findDate);
 
 module.exports = router;
