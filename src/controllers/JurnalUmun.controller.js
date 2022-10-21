@@ -5,7 +5,6 @@ const {
   updatedatalabarugi,
 } = require("../models/labarugi.model");
 
-const { generateNumber } = require("../helpers/generate");
 const {
   success201,
   err400,
@@ -19,7 +18,6 @@ const {
   deletedata,
   getByParams,
 } = require("../models/JurnalUmun.model");
-const { getByName, getByKode } = require("../models/perkiraan.models");
 
 module.exports = {
   CreateJurnal: async (req, res) => {
