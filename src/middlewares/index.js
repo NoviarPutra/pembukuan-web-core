@@ -176,6 +176,7 @@ module.exports = {
       req.body.namaPerkiraanJurnal = namaPerkiraanJurnal.toUpperCase();
       req.body.kodePerkiraan = check.kode_perkiraan;
       req.body.nomerBukti = `NB-${generateNumber(nomerBukti)}`;
+      next();
     } else {
       checkNomer.reverse();
       num = incrementNumber(checkNomer[0].nomerJurnal);
@@ -187,9 +188,18 @@ module.exports = {
       next();
     }
   },
-  validateJurnalBeforeUpdate: (req, res, next) => {
-    const { uraian, nomerBukti, namaPerkiraanJurnal, debet, kredit } = req.body;
-    if (uraian === "" || uraian === undefined) {
+  validateJurnalBeforeUpdate: async (req, res, next) => {
+    const {
+      tanggalJurnal,
+      uraian,
+      nomerBukti,
+      namaPerkiraanJurnal,
+      debet,
+      kredit,
+    } = req.body;
+    if (tanggalJurnal === "" || tanggalJurnal === undefined) {
+      return res.status(400).json(err400("tanggal tidak boleh kosong"));
+    } else if (uraian === "" || uraian === undefined) {
       return res.status(400).json(err400("uraian tidak boleh kosong"));
     } else if (nomerBukti === "" || nomerBukti === undefined) {
       return res.status(400).json(err400("nomerBukti tidak boleh kosong"));
@@ -204,7 +214,25 @@ module.exports = {
       return res.status(400).json(err400("debet tidak boleh kosong"));
     } else if (kredit === "" || kredit === undefined) {
       return res.status(400).json(err400("kredit tidak boleh kosong"));
+    } else if (debet === 0 && kredit === 0) {
+      return res
+        .status(400)
+        .json(err400("salah satu debet / kredit tidak boleh 0"));
+    } else if (typeof debet !== "number") {
+      return res.status(400).json(err400("debet harus type Number"));
+    } else if (typeof kredit !== "number") {
+      return res.status(400).json(err400("kredit harus type Number"));
     }
+
+    const check = await getByName({
+      nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
+    });
+    if (!check)
+      return res.status(404).json(err404("Nama Perkiraan tidak valid"));
+    req.body.uraian = req.body.uraian.toUpperCase();
+    req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
+    req.body.kodePerkiraan = check.kode_perkiraan;
+    // req.body.nomerBukti = generateNumber(req.body.nomerBukti);
     next();
   },
   aggregateDebetKredit: async (req, res, next) => {
@@ -222,8 +250,10 @@ module.exports = {
           },
         },
       ]);
-      req.body.totalDebet = resp[0].totalDebet;
-      req.body.totalKredit = resp[0].totalKredit;
+      if (resp[0]) {
+        req.body.totalDebet = resp[0].totalDebet;
+        req.body.totalKredit = resp[0].totalKredit;
+      }
       next();
     } catch (error) {
       console.log(error);

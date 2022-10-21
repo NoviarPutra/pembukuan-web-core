@@ -1,11 +1,11 @@
-const { Jurnal, Labarugi } = require("../models/schema");
+const { Jurnal } = require("../models/schema");
 const {
   insertlabarugi,
   getByParamsLabarugi,
   updatedatalabarugi,
 } = require("../models/labarugi.model");
 
-const { generateNumber, incrementNumber } = require("../helpers/generate");
+const { generateNumber } = require("../helpers/generate");
 const {
   success201,
   err400,
@@ -248,15 +248,6 @@ module.exports = {
   },
   updatejurnal: async (req, res) => {
     try {
-      const check = await getByName({
-        nama_perkiraan: req.body.namaPerkiraanJurnal.toUpperCase(),
-      });
-      if (!check)
-        return res.status(404).json(err404("Nama Perkiraan tidak valid"));
-      req.body.uraian = req.body.uraian.toUpperCase();
-      req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
-      req.body.kodePerkiraan = check.kode_perkiraan;
-      req.body.nomerBukti = generateNumber(req.body.nomerBukti);
       let update = await updatedata({ _id: req.params._id }, req.body);
       if (update) return res.status(200).json(success200(req.body));
       return res.status(404).json(err404("ID tidak ditemukan"));
