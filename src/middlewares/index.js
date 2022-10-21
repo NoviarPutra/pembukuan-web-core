@@ -2,6 +2,8 @@ const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
 const { body, validationResult, param } = require("express-validator");
 const { err400 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
+const { getAll } = require("../models/JurnalUmun.model");
+const { incrementNumber, generateNumber } = require("../helpers/generate");
 
 module.exports = {
   validateBeforeCreatePerkiraan: async (req, res, next) => {
@@ -115,6 +117,76 @@ module.exports = {
 
     return res.status(400).json(err400(errors.array()));
   },
+  validateBeforeCreateJurnal: async (req, res, next) => {
+    const {
+      tanggalJurnal,
+      uraian,
+      nomerBukti,
+      namaPerkiraanJurnal,
+      debet,
+      kredit,
+    } = req.body;
+    let num;
+    if (tanggalJurnal === "" || tanggalJurnal === undefined) {
+      return res.status(400).json(err400("tanggal tidak boleh kosong"));
+    } else if (uraian === "" || uraian === undefined) {
+      return res.status(400).json(err400("uraian tidak boleh kosong"));
+    } else if (nomerBukti === "" || nomerBukti === undefined) {
+      return res.status(400).json(err400("nomerBukti tidak boleh kosong"));
+    } else if (
+      namaPerkiraanJurnal === "" ||
+      namaPerkiraanJurnal === undefined
+    ) {
+      return res
+        .status(400)
+        .json(err400("namaPerkiraanJurnal tidak boleh kosong"));
+    } else if (debet === "" || debet === undefined) {
+      return res.status(400).json(err400("debet tidak boleh kosong"));
+    } else if (kredit === "" || kredit === undefined) {
+      return res.status(400).json(err400("kredit tidak boleh kosong"));
+    } else if (debet === 0 && kredit === 0) {
+      return res
+        .status(400)
+        .json(err400("salah satu debet / kredit tidak boleh 0"));
+    } else if (nomerBukti === 0) {
+      return res.status(400).json(err400("nomer bukti harus > 0"));
+    } else if (typeof nomerBukti !== "number") {
+      return res.status(400).json(err400("nomer bukti harus type Number"));
+    } else if (typeof debet !== "number") {
+      return res.status(400).json(err400("debet harus type Number"));
+    } else if (typeof kredit !== "number") {
+      return res.status(400).json(err400("kredit harus type Number"));
+    }
+
+    // CHECK NAMA PERKIRAAN
+    const check = await getByName({
+      nama_perkiraan: namaPerkiraanJurnal.toUpperCase(),
+    });
+
+    if (!check)
+      return res.status(404).json(err404("Nama Perkiraan tidak valid"));
+
+    // CHECK NOMER JURNAL
+
+    const checkNomer = await getAll();
+
+    if (checkNomer[0] === undefined) {
+      req.body.nomerJurnal = incrementNumber(checkNomer[0]);
+      req.body.uraian = uraian.toUpperCase();
+      req.body.namaPerkiraanJurnal = namaPerkiraanJurnal.toUpperCase();
+      req.body.kodePerkiraan = check.kode_perkiraan;
+      req.body.nomerBukti = `NB-${generateNumber(nomerBukti)}`;
+    } else {
+      checkNomer.reverse();
+      num = incrementNumber(checkNomer[0].nomerJurnal);
+      req.body.nomerJurnal = num;
+      req.body.uraian = uraian.toUpperCase();
+      req.body.namaPerkiraanJurnal = namaPerkiraanJurnal.toUpperCase();
+      req.body.kodePerkiraan = check.kode_perkiraan;
+      req.body.nomerBukti = `NB-${generateNumber(nomerBukti)}`;
+      next();
+    }
+  },
   validateJurnalBeforeUpdate: (req, res, next) => {
     const { uraian, nomerBukti, namaPerkiraanJurnal, debet, kredit } = req.body;
     if (uraian === "" || uraian === undefined) {
@@ -157,7 +229,6 @@ module.exports = {
       console.log(error);
     }
   },
-
   aggregateForYear: async (req, res, next) => {
     try {
       const { tahun } = req.params;
@@ -248,7 +319,6 @@ module.exports = {
       console.log(error);
     }
   },
-   
   aggregateDebetKreditSaldo: async (req, res, next) => {
     try {
       const resp = await Labarugi.aggregate([
@@ -304,7 +374,6 @@ module.exports = {
       console.log(error);
     }
   },
-
   aggregateForMonthLabarugi: async (req, res, next) => {
     try {
       const { tahun, bulan } = req.params;
