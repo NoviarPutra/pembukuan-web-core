@@ -17,7 +17,7 @@ const {
 } = require("../models/JurnalUmun.model");
 const { getByName } = require("../models/perkiraan.models");
 
-const listLabarugi = ["705", "707", "702", "701", "703", "704", "706", "709"];
+const listLabarugi = ["705", "707", "702", "701", "703", "704", "706", "709","601", "602"];
 
 module.exports = {
   CreateJurnal: async (req, res) => {
@@ -64,6 +64,8 @@ module.exports = {
         req.body.kodePerkiraan = check.kode_perkiraan;
         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
 
+        const resp = await insertJurnal(req.body);
+
         console.log(req.body)
         if(listLabarugi.find(val => val == req.body.kodePerkiraan)) {
           try {
@@ -73,12 +75,11 @@ module.exports = {
                   lbDebet : req.body.debet,
                   lbKredit : req.body.kredit
                   });
-              return res.status(201).json(success201(resp));
           } catch (error) {
               return res.status(400).json(err400(error));
-              }
-    }
-        const resp = await insertJurnal(req.body);
+              } }
+
+        
         return res.status(201).json(success201(resp));
       }
     } catch (error) {

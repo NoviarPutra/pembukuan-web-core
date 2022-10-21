@@ -1,4 +1,4 @@
-const { Jurnal, Perkiraan } = require("../models/schema");
+const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
 const { body, validationResult, param } = require("express-validator");
 const { err400 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
@@ -152,6 +152,30 @@ module.exports = {
       ]);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+   
+  aggregateDebetKreditSaldo: async (req, res, next) => {
+    try {
+      const resp = await Labarugi.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
       next();
     } catch (error) {
       console.log(error);
