@@ -15,10 +15,10 @@ module.exports = {
       return res.status(200).json({
         code: 200,
         status: "OK",
-        data: data,
         totalDebet: totalDebet,
         totalKredit: totalKredit,
         saldo: saldo,
+        data: data,
       });
     } catch (error) {
       res.status(400).json(err400(error));
