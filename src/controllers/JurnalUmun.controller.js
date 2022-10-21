@@ -1,4 +1,5 @@
 const { Jurnal } = require("../models/schema");
+const { insertlabarugi, getByParamsLabarugi, updatedatalabarugi } = require("../models/labarugi.model")
 
 const { generateNumber, incrementNumber } = require("../helpers/generate");
 const {
@@ -14,7 +15,9 @@ const {
   deletedata,
   getByParams,
 } = require("../models/JurnalUmun.model");
-const { getByName } = require("../models/perkiraan.models");
+const { getByName, getByKode } = require("../models/perkiraan.models");
+
+const listLabarugi = ["705", "707", "702", "701", "703", "704", "706", "709","601", "602"];
 
 module.exports = {
   CreateJurnal: async (req, res) => {
@@ -35,6 +38,33 @@ module.exports = {
           req.body.namaPerkiraanJurnal.toUpperCase();
         req.body.kodePerkiraan = check.kode_perkiraan;
         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+        console.log(req.body)
+        if(listLabarugi.find(val => val == req.body.kodePerkiraan)) {
+          const data = await getByParamsLabarugi({
+            kodePerkiraan : req.body.kodePerkiraan
+          });
+          if(data == req.body.perkiraan) {
+            
+              const upt = await updatedatalabarugi ({
+                tanggalLabaRugi : req.body.tanggalJurnal,
+                lbDebet : req.body.debet + data.lbDebet,
+                lbKredit : req.body.kredit + data.lbKredit
+              })
+          } else {
+            try {
+              const resp = await insertlabarugi({
+                  tanggalLabaRugi : req.body.tanggalJurnal,
+                  kodePerkiraan : req.body.kodePerkiraan,
+                  lbDebet : req.body.debet,
+                  lbKredit : req.body.kredit
+                  });
+              return res.status(201).json(success201(resp));
+          } catch (error) {
+              return res.status(400).json(err400(error));
+              }
+          }    
+        }
+
         const resp = await insertJurnal(req.body);
         return res.status(201).json(success201(resp));
       } else {
@@ -45,13 +75,47 @@ module.exports = {
           req.body.namaPerkiraanJurnal.toUpperCase();
         req.body.kodePerkiraan = check.kode_perkiraan;
         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
+
         const resp = await insertJurnal(req.body);
+
+        if(listLabarugi.find(val => val == req.body.kodePerkiraan)) {
+          const data = await getByParamsLabarugi({
+            kodePerkiraan : req.body.kodePerkiraan
+              });
+          console.log(data);
+          if(data == req.body.kodePerkiraan) {
+            const debet = req.body.debet + data.lbDebet;
+            const kredit =  req.body.kredit + data.lbKredit;
+            const upt = await updatedatalabarugi (
+              {kodePerkiraan : req.body.kodePerkiraan},
+              {
+              tanggalLabaRugi : req.body.tanggalJurnal,
+              lbDebet : debet,
+              lbKredit : kredit
+            })
+            return res.status(201).json(success201(upt))
+          } else {
+              try {
+              const resp = await insertlabarugi({
+                  tanggalLabaRugi : req.body.tanggalJurnal,
+                  kodePerkiraan : req.body.kodePerkiraan,
+                  lbDebet : req.body.debet,
+                  lbKredit : req.body.kredit
+                  });
+          } catch (error) {
+              return res.status(400).json(err400(error));
+              }
+            }
+           }
+
+        
         return res.status(201).json(success201(resp));
       }
     } catch (error) {
       return res.status(400).json(err400(error));
     }
   },
+  
   getAlldata: async (req, res) => {
     try {
       const { totalDebet, totalKredit } = req.body;
@@ -69,9 +133,9 @@ module.exports = {
   },
   getdatabykode: async (req, res) => {
     try {
-      const id = req.params.kodePerkiraan;
+      const id = req.params.nomerBukti;
       console.log(id);
-      const data = await getByParams({ kodePerkiraan: id });
+      const data = await getByParams({ nomerBukti: id });
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
     } catch (error) {

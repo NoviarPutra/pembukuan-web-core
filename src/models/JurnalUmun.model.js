@@ -1,12 +1,5 @@
 const { Jurnal } = require("./schema");
 
-
-// {
-//   "nomorReferensi": "8080",
-//   "referensi": 
-// }
-// new LabaRugi(data)
-
 module.exports = {
   insertJurnal: (data) => {
     return new Promise((resolve, reject) => {

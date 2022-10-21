@@ -1,5 +1,5 @@
-const { Jurnal } = require("../models/schema");
-const { body, validationResult } = require("express-validator");
+const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
+const { body, validationResult, param } = require("express-validator");
 const { err400 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
 
@@ -157,6 +157,7 @@ module.exports = {
       console.log(error);
     }
   },
+
   aggregateForYear: async (req, res, next) => {
     try {
       const { tahun } = req.params;
@@ -242,6 +243,125 @@ module.exports = {
       ]);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+   
+  aggregateDebetKreditSaldo: async (req, res, next) => {
+    try {
+      const resp = await Labarugi.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  aggregateForYearLabarugi: async (req, res, next) => {
+    try {
+      const { tahun } = req.params;
+      const resp = await Labarugi.aggregate([
+        {
+          $match: {
+            tanggalLabaRugi: {
+              $gte: new Date(`${tahun}-01-01`),
+              $lte: new Date(`${tahun}-12-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  aggregateForMonthLabarugi: async (req, res, next) => {
+    try {
+      const { tahun, bulan } = req.params;
+      const resp = await Labarugi.aggregate([
+        {
+          $match: {
+            tanggalLabaRugi: {
+              $gte: new Date(`${tahun}-${bulan}-01`),
+              $lte: new Date(`${tahun}-${bulan}-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
+          },
+        },
+      ]);
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  aggregateForDateLabarugi: async (req, res, next) => {
+    try {
+      const { tahun, bulan, hari } = req.params;
+      const resp = await Labarugi.aggregate([
+        {
+          $match: {
+            tanggalLabaRugi: new Date(`${tahun}-${bulan}-${hari}`),
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
+          },
+        },
+      ]);
+
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
       next();
     } catch (error) {
       console.log(error);
