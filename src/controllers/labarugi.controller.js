@@ -1,4 +1,4 @@
-const {  getAllLabarugi } = require("../models/labarugi.model");
+const {  getAllLabarugi, deletedataLabarugi, getByParamsLabarugi } = require("../models/labarugi.model");
 const { Labarugi } = require("../models/schema");
 const {
     success201,
@@ -111,6 +111,20 @@ module.exports = {
           return res.status(400).json(err400("Tahun yang dicari kaga ada bang "));
           // totalDebet: totalDebet,
           // totalKredit: totalKredit,
+        } catch (error) {
+          return res.status(400).json(err400(error));
+        }
+      },
+
+      deleteLabarugi: async (req, res) => {
+        try {
+          let hapus = await getByParamsLabarugi({ _id: req.params._id });
+          console.log(hapus)
+          if (!hapus) {
+            return res.status(404).json(err404("nomer jurnal tidak ditemukan."));
+          }
+          await deletedataLabarugi({ _id: req.params._id });
+          return res.sendStatus(204);
         } catch (error) {
           return res.status(400).json(err400(error));
         }

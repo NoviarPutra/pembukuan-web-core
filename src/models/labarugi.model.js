@@ -46,7 +46,7 @@ module.exports = {
     });
   },
 
-  deletedata: (id) => {
+  deletedataLabarugi: (id) => {
     return new Promise((resolve, reject) => {
       Labarugi.findOneAndRemove(id, (err, result) => {
         if (err) {

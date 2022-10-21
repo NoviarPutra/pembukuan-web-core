@@ -43,13 +43,16 @@ module.exports = {
           const data = await getByParamsLabarugi({
             kodePerkiraan : req.body.kodePerkiraan
           });
-          if(data == req.body.perkiraan) {
+          console.log(data);
+          console.log(req.body.KodePerkiraan);
+          if(data.kodePerkiraan == req.body.KodePerkiraan) {
             
               const upt = await updatedatalabarugi ({
                 tanggalLabaRugi : req.body.tanggalJurnal,
                 lbDebet : req.body.debet + data.lbDebet,
                 lbKredit : req.body.kredit + data.lbKredit
-              })
+              });
+              return res.status(201).json(success201(upt));
           } else {
             try {
               const resp = await insertlabarugi({
@@ -106,8 +109,7 @@ module.exports = {
               return res.status(400).json(err400(error));
               }
             }
-           }
-
+           } 
         
         return res.status(201).json(success201(resp));
       }
@@ -244,7 +246,7 @@ module.exports = {
   },
   deletejurnal: async (req, res) => {
     try {
-      let hapus = await getByParams({ _id: req.params._id });
+      let hapus = await getByParamsLabarugi({ _id: req.params._id });
       if (!hapus) {
         return res.status(404).json(err404("nomer jurnal tidak ditemukan."));
       }
