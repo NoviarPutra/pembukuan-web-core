@@ -1,24 +1,65 @@
 const { getAllLabarugi } = require("../models/labarugi.model");
-const { Labarugi } = require("../models/schema");
+const { Labarugi, Jurnal } = require("../models/schema");
 const {
   success201,
   err400,
   success200,
   err404,
 } = require("../helpers/messages");
+const { getAll } = require("../models/JurnalUmun.model");
 
 module.exports = {
   getAlldata: async (req, res) => {
     try {
-      const { totalDebet, totalKredit, saldo } = req.body;
-      const data = await getAllLabarugi();
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            kodePerkiraan: {
+              $gte: "600",
+              $lte: "799",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$namaPerkiraanJurnal",
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      const totalResp = await Jurnal.aggregate([
+        {
+          $match: {
+            kodePerkiraan: {
+              $gte: "600",
+              $lte: "799",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
       return res.status(200).json({
         code: 200,
         status: "OK",
-        totalDebet: totalDebet,
-        totalKredit: totalKredit,
-        saldo: saldo,
-        data: data,
+        totalDebet: totalResp[0].totalDebet,
+        totalKredit: totalResp[0].totalKredit,
+        saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
+        data: resp,
       });
     } catch (error) {
       res.status(400).json(err400(error));
