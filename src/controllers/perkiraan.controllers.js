@@ -34,7 +34,7 @@ module.exports = {
   },
   getPerkiraanByKode: async (req, res) => {
     try {
-      const id = req.params.kode_perkiraan;
+      const id = 101;
       const resp = await getByKode({ kode_perkiraan: id });
       if (resp) return res.status(200).json(success200(resp));
       return res.status(404).json(err404());

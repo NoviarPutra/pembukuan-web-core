@@ -19,9 +19,9 @@ module.exports = {
     });
   },
 
-  getByParams: (kode) => {
+  getByParams: (nomerBukti) => {
     return new Promise((resolve, reject) => {
-      Jurnal.findOne(kode, (err, result) => {
+      Jurnal.findOne(nomerBukti, (err, result) => {
         if (err) reject(err);
         resolve(result);
       });

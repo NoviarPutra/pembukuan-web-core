@@ -1,4 +1,4 @@
-const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
+const { Jurnal, Perkiraan, Labarugi, Aruskas } = require("../models/schema");
 const { body, validationResult, param } = require("express-validator");
 const { err400 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
@@ -37,86 +37,7 @@ module.exports = {
     req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
-  validatejurnalBeforeCreate: async (req, res, next) => {
-    let validators = [
-      body("tanggalJurnal")
-        .exists()
-        .withMessage("Field tanggal jurnal harus tersedia")
-        .bail()
-        .notEmpty()
-        .withMessage("Tanggal jurnal tidak boleh kosong")
-        .bail()
-        .isISO8601()
-        .withMessage("Format tanggal harus sesuai")
-        .bail()
-        .toDate(),
-      body("nomerBukti")
-        .exists()
-        .withMessage("Field nomer bukti  harus tersedia")
-        .bail()
-        .notEmpty()
-        .withMessage("nomer bukti tidak boleh kosong"),
-      body("uraian")
-        .exists()
-        .withMessage("Field uraian  harus tersedia")
-        .bail()
-        .notEmpty()
-        .withMessage("uraian tidak boleh kosong")
-        .toUpperCase(),
-      // body("kodePerkiraan")
-      //   .exists()
-      //   .withMessage("Field kode perkiraan harus tersedia")
-      //   .bail()
-      //   .notEmpty()
-      //   .withMessage("Kode perkiraan tidak boleh kosong")
-      //   .bail()
-      //   .custom(async (value) => {
-      //     let perkiraan = await Perkiraan.findOne({ kode: value });
-      //     if (!perkiraan) {
-      //       return Promise.reject("kode Perkiraan Tidak Tersedia");
-      //     }
-      //   }),
-      // body("namaPerkiraanJurnal")
-      //   .exists()
-      //   .withMessage("Field nama Perkiraan harus tersedia")
-      //   .bail()
-      //   .notEmpty()
-      //   .withMessage("Nama Perkiraan boleh kosong")
-      //   .bail()
-      //   .toUpperCase()
-      //   .custom(async (value, { req }) => {
-      //     let perkiraan = await Perkiraan.findOne({
-      //       kode_perkiraan: req.body.kodePerkiraan,
-      //     });
-      //     if (perkiraan.nama_perkiraan != value) {
-      //       return Promise.reject("Nama Perkiraan tidak valid");
-      //     }
-      //   }),
-      // body("debet")
-      //   .exists()
-      //   .withMessage("Field debet  harus tersedia")
-      //   .bail()
-      //   .notEmpty()
-      //   .withMessage("debet tidak boleh kosong"),
-      // body("kredit")
-      //   .exists()
-      //   .withMessage("Field kredit  harus tersedia")
-      //   .bail()
-      //   .notEmpty()
-      //   .withMessage("kredit tidak boleh kosong"),
-    ];
-    for (let validation of validators) {
-      const result = await validation.run(req);
-      // if (result.errors.length) break;
-    }
 
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      return next();
-    }
-
-    return res.status(400).json(err400(errors.array()));
-  },
   validateBeforeCreateJurnal: async (req, res, next) => {
     const {
       tanggalJurnal,
@@ -458,6 +379,31 @@ module.exports = {
         },
       ]);
 
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+  aggregateDebetKreditSaldoAruskas: async (req, res, next) => {
+    try {
+      const resp = await Aruskas.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
       req.body.saldo = req.body.totalDebet - req.body.totalKredit;

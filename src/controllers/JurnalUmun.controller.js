@@ -18,85 +18,12 @@ const {
   deletedata,
   getByParams,
 } = require("../models/JurnalUmun.model");
+const { insertlaruskas } = require("../models/aruskas.model");
 
 module.exports = {
   CreateJurnal: async (req, res) => {
     try {
-      // // CHECK NOMOR JURNAL
-      //       const checkNomer = await getAll();
-      //       if (checkNomer[0] === undefined) {
-      //         req.body.nomerJurnal = incrementNumber(checkNomer[0]);
-      //         req.body.namaPerkiraanJurnal =
-      //           req.body.namaPerkiraanJurnal.toUpperCase();
-      //         req.body.kodePerkiraan = check.kode_perkiraan;
-      //         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
-      //         if (listLabarugi.find((val) => val == req.body.kodePerkiraan)) {
-      //           const data = await getByParamsLabarugi({
-      //             kodePerkiraan: req.body.kodePerkiraan,
-      //           });
-      //           if (data == req.body.perkiraan) {
-      //             const upt = await updatedatalabarugi({
-      //               tanggalLabaRugi: req.body.tanggalJurnal,
-      //               lbDebet: req.body.debet + data.lbDebet,
-      //               lbKredit: req.body.kredit + data.lbKredit,
-      //             });
-      //           } else {
-      //             try {
-      //               const resp = await insertlabarugi({
-      //                 tanggalLabaRugi: req.body.tanggalJurnal,
-      //                 kodePerkiraan: req.body.kodePerkiraan,
-      //                 lbDebet: req.body.debet,
-      //                 lbKredit: req.body.kredit,
-      //               });
-      //               return res.status(201).json(success201(resp));
-      //             } catch (error) {
-      //               return res.status(400).json(err400(error));
-      //             }
-      //           }
-      //         }
-      //         const resp = await insertJurnal(req.body);
-      //         return res.status(201).json(success201(resp));
-      //       } else {
-      //         checkNomer.reverse();
-      //         num = incrementNumber(checkNomer[0].nomerJurnal);
-      //         req.body.nomerJurnal = num;
-      //         req.body.namaPerkiraanJurnal =
-      //           req.body.namaPerkiraanJurnal.toUpperCase();
-      //         req.body.kodePerkiraan = check.kode_perkiraan;
-      //         req.body.nomerBukti = `NB-${generateNumber(req.body.nomerBukti)}`;
-      //         const resp = await insertJurnal(req.body);
-      //         if (listLabarugi.find((val) => val == req.body.kodePerkiraan)) {
-      //           const data = await getByParamsLabarugi({
-      //             kodePerkiraan: req.body.kodePerkiraan,
-      //           });
-      //           console.log(data);
-      //           if (data == req.body.kodePerkiraan) {
-      //             const debet = req.body.debet + data.lbDebet;
-      //             const kredit = req.body.kredit + data.lbKredit;
-      //             const upt = await updatedatalabarugi(
-      //               { kodePerkiraan: req.body.kodePerkiraan },
-      //               {
-      //                 tanggalLabaRugi: req.body.tanggalJurnal,
-      //                 lbDebet: debet,
-      //                 lbKredit: kredit,
-      //               }
-      //             );
-      //             return res.status(201).json(success201(upt));
-      //           } else {
-      //             try {
-      //               const resp = await insertlabarugi({
-      //                 tanggalLabaRugi: req.body.tanggalJurnal,
-      //                 kodePerkiraan: req.body.kodePerkiraan,
-      //                 lbDebet: req.body.debet,
-      //                 lbKredit: req.body.kredit,
-      //               });
-      //             } catch (error) {
-      //               return res.status(400).json(err400(error));
-      //             }
-      //           }
-      //         }
-      //         return res.status(201).json(success201(resp));
-      //       }
+
       const { tanggalJurnal, kodePerkiraan, debet, kredit } = req.body;
 
       // KITE CHECK KODE PERKIRAANNYA TERMASUK GOLONGAN2 YANG TERPILIH ATAU BIKAN wkwkwk
@@ -128,6 +55,12 @@ module.exports = {
             lbKredit: kredit,
           });
         }
+      }
+
+      if(parseInt(kodePerkiraan) == 101) {
+        await insertlaruskas(req.body, {
+          saldo : debet - kredit
+        })
       }
       // NAH YG INI MAH AUTO INSERT MAU YG DIATAS KEDETEK IF MAU KAGA JUGA YG DIMARI MAH JALAN TERUSSSS WKWKWKWKWK
       const resp = await insertJurnal(req.body);
