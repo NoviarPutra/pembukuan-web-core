@@ -10,6 +10,6 @@ const {
 
 const router = express.Router();
 
-router.get("/", getAlldata);
+router.get("/", [aggregateDebetKreditSaldoAruskas], getAlldata);
 
 module.exports = router;

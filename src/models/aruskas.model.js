@@ -8,9 +8,9 @@ const { Aruskas, Jurnal } = require("./schema");
 
 module.exports = {
 
-  getAllaruskas: (kodePerkiraan) => {
+  getAllaruskas: () => {
     return new Promise((resolve, reject) => {
-        Jurnal.findOne(kodePerkiraan, (err, result) => {
+        Aruskas.find((err, result) => {
         if (err) reject(err);
         resolve(result);
       });

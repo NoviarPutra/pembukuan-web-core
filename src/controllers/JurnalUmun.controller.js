@@ -118,7 +118,7 @@ module.exports = {
         .status(400)
         .json(err400("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
     } catch (error) {
-      return res.status(400).json(err400(error));
+      return res.status(400).json(error);
     }
   },
   findMonth: async (req, res) => {
@@ -143,11 +143,8 @@ module.exports = {
           totalKredit: totalKredit,
           data: resp,
         });
-      return res
-        .status(400)
-        .json(err400("Tahun / Bulan yang dicari kaga ada bang "));
     } catch (error) {
-      return res.status(400).json(err400(error));
+      return res.status(400).json(error);
     }
   },
   findYear: async (req, res) => {
@@ -172,9 +169,8 @@ module.exports = {
           totalKredit: totalKredit,
           data: resp,
         });
-      return res.status(400).json(err400("Tahun yang dicari kaga ada bang "));
     } catch (error) {
-      return res.status(400).json(err400(error));
+      return res.status(400).json(error);
     }
   },
   updatejurnal: async (req, res) => {

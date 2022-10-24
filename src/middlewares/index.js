@@ -204,11 +204,15 @@ module.exports = {
           },
         },
       ]);
-      req.body.totalDebet = resp[0].totalDebet;
-      req.body.totalKredit = resp[0].totalKredit;
-      next();
+      if (resp[0]) {
+        req.body.totalDebet = resp[0].totalDebet;
+        req.body.totalKredit = resp[0].totalKredit;
+        next();
+      } else {
+        return res.status(400).json(err400("Tahun yang dicari kaga ada bang "));
+      }
     } catch (error) {
-      console.log(error);
+      return res.status(400).json(err400(error));
     }
   },
   aggregateForMonth: async (req, res, next) => {
@@ -235,11 +239,17 @@ module.exports = {
           },
         },
       ]);
-      req.body.totalDebet = resp[0].totalDebet;
-      req.body.totalKredit = resp[0].totalKredit;
-      next();
+      if (resp[0]) {
+        req.body.totalDebet = resp[0].totalDebet;
+        req.body.totalKredit = resp[0].totalKredit;
+        next();
+      } else {
+        return res
+          .status(400)
+          .json(err400("Tahun / Bulan yang dicari kaga ada bang "));
+      }
     } catch (error) {
-      console.log(error);
+      return res.status(400).json(err400(error));
     }
   },
   aggregateForDate: async (req, res, next) => {
@@ -263,11 +273,17 @@ module.exports = {
           },
         },
       ]);
-      req.body.totalDebet = resp[0].totalDebet;
-      req.body.totalKredit = resp[0].totalKredit;
-      next();
+      if (resp[0]) {
+        req.body.totalDebet = resp[0].totalDebet;
+        req.body.totalKredit = resp[0].totalKredit;
+        next();
+      } else {
+        return res
+          .status(400)
+          .json(err400("Tahun / Bulan / Hari yang dicari kaga ada bang "));
+      }
     } catch (error) {
-      console.log(error);
+      return res.status(400).json(err400(error));
     }
   },
   aggregateDebetKreditSaldo: async (req, res, next) => {

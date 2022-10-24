@@ -12,29 +12,30 @@ const { getAll } = require("../models/JurnalUmun.model");
 module.exports = {
 
     getAlldata: async (req, res) => {
-        try {
-          const id = 101;
-          const resp = await getByKode({ kodePerkiraan: id });
-          if (resp) return res.status(200).json(success200(resp));
-          return res.status(404).json(err404());
-        } catch (error) {
-          return res.status(400).json(err400(error));
-        }
-      },
-    // try {
-    //   const { totalDebet, totalKredit, saldo } = req.body;
-    //   const data = await getAll;
-    //   return res.status(200).json({
-    //     code: 200,
-    //     status: "OK",
-    //     totalDebet: totalDebet,
-    //     totalKredit: totalKredit,
-    //     saldo: saldo,
-    //     data: data,
-    //   });
-    // } catch (error) {
-    //   res.status(400).json(err400(error));
-    // }
+    //     try {
+    //       const id = 101;
+    //       const resp = await getByKode({ kodePerkiraan: id });
+    //       if (resp) return res.status(200).json(success200(resp));
+    //       return res.status(404).json(err404());
+    //     } catch (error) {
+    //       return res.status(400).json(err400(error));
+    //     }
+    //   },
+    try {
+      const { totalDebet, totalKredit, saldo } = req.body;
+      const data = await getAllaruskas();
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: totalDebet,
+        totalKredit: totalKredit,
+        saldo: saldo,
+        data: data,
+      });
+    } catch (error) {
+      res.status(400).json(err400(error));
+    }
+},
  
 
 
