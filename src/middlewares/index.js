@@ -197,7 +197,7 @@ module.exports = {
             _id: null,
             totalDebet: {
               $sum: "$debet",
-            },
+            },  
             totalKredit: {
               $sum: "$kredit",
             },
@@ -288,19 +288,29 @@ module.exports = {
   },
   aggregateDebetKreditSaldo: async (req, res, next) => {
     try {
-      const resp = await Labarugi.aggregate([
-        {
-          $group: {
-            _id: null,
-            totalDebet: {
-              $sum: "$lbDebet",
-            },
-            totalKredit: {
-              $sum: "$lbKredit",
+
+      const getdata = true;
+
+      if( getdata == true) {
+        const resp = await Jurnal.aggregate([
+          {
+            $match : {kodePerkiraan : { $gt: 600, $lt : 800}},
+          },
+          {
+            $group: {
+              _id: null,
+  
+              totalDebet: {
+                $sum: "$debet",
+              },
+              totalKredit: {
+                $sum: "kredit",
+              },
             },
           },
-        },
-      ]);
+        ]);
+      }
+      console.log(resp);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
       req.body.saldo = req.body.totalDebet - req.body.totalKredit;
