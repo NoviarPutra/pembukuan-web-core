@@ -18,51 +18,10 @@ const {
   deletedata,
   getByParams,
 } = require("../models/JurnalUmun.model");
-const { insertlaruskas } = require("../models/aruskas.model");
 
 module.exports = {
   CreateJurnal: async (req, res) => {
     try {
-
-      const { tanggalJurnal, kodePerkiraan, debet, kredit } = req.body;
-
-      // KITE CHECK KODE PERKIRAANNYA TERMASUK GOLONGAN2 YANG TERPILIH ATAU BIKAN wkwkwk
-      if (parseInt(kodePerkiraan) > 600) {
-        // KALO MASUK, YUK DI CEK UDEH TERDAFTAR ATAU BELOMAN KODE PERKIRAANYA DI DAFTAR LABA RUGINYA
-        const ngecek = await getByParamsLabarugi({
-          kodePerkiraan: kodePerkiraan,
-        });
-        if (ngecek) {
-          // KALO TERNAYATA KODENYA UDAH TERDAFTAR KITA UPDATE AJA NILAI DEBET/KREDITNYA
-          await updatedatalabarugi(
-            {
-              // INI YG MAU DICARI
-              kodePerkiraan: kodePerkiraan,
-            },
-            {
-              // INI NILAI YG MAU DI UPDATE DARI KODE DIATAS
-              tanggalLabaRugi: tanggalJurnal,
-              lbDebet: ngecek.lbDebet + debet,
-              lbKredit: ngecek.lbKredit + kredit,
-            }
-          );
-        } else {
-          // KALO BELOMAN TERDAFTAR YG DIATAS LANGSUNG LONCAT KEMARI NIH
-          await insertlabarugi({
-            tanggalLabaRugi: tanggalJurnal,
-            kodePerkiraan: kodePerkiraan,
-            lbDebet: debet,
-            lbKredit: kredit,
-          });
-        }
-      }
-
-      if(parseInt(kodePerkiraan) == 101) {
-        await insertlaruskas(req.body, {
-          saldo : debet - kredit
-        })
-      }
-      // NAH YG INI MAH AUTO INSERT MAU YG DIATAS KEDETEK IF MAU KAGA JUGA YG DIMARI MAH JALAN TERUSSSS WKWKWKWKWK
       const resp = await insertJurnal(req.body);
       return res.status(201).json(success201(resp));
     } catch (error) {

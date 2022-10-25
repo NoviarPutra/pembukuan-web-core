@@ -2,14 +2,11 @@ const express = require("express");
 const {
     getAlldata,
   } = require("../controllers/aruskas.controller");
+const { aggregateDebetKreditSaldoAruskas } = require("../middlewares");
 
-  const {
-    aggregateDebetKreditSaldoAruskas,
-    
-  } = require("../middlewares");
 
 const router = express.Router();
 
-router.get("/", [aggregateDebetKreditSaldoAruskas], getAlldata);
+router.get("/" ,getAlldata);
 
 module.exports = router;

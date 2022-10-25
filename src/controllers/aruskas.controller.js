@@ -1,5 +1,5 @@
 const { getAllaruskas } = require("../models/aruskas.model");
-const { Aruskas } = require("../models/schema");
+const { Aruskas, Jurnal} = require("../models/schema");
 const {
   success201,
   err400,
@@ -11,31 +11,77 @@ const { getAll } = require("../models/JurnalUmun.model");
 
 module.exports = {
 
-    getAlldata: async (req, res) => {
-    //     try {
-    //       const id = 101;
-    //       const resp = await getByKode({ kodePerkiraan: id });
-    //       if (resp) return res.status(200).json(success200(resp));
-    //       return res.status(404).json(err404());
-    //     } catch (error) {
-    //       return res.status(400).json(err400(error));
-    //     }
-    //   },
+  getAlldata: async (req, res) => {
     try {
-      const { totalDebet, totalKredit, saldo } = req.body;
-      const data = await getAllaruskas();
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            kodePerkiraan: {
+              $gte: "101",
+              $lte: "101",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            nomerJurnal : {
+              $push : "$nomerJurnal"
+            },
+            tanggalAruskas : {
+              $push : "$tanggalJurnal"
+            },
+            nomerBukti : {
+              $push : "$nomerBukti"
+            },
+            Uraian : {
+              $push : "$uraian"
+            },
+            namaPerkiraanJurnal : {
+              $push : "$namaPerkiraanJurnal"
+            },
+            Debet: {
+              $push : "$debet",
+            },
+            Kredit: {
+              $push : "$kredit",
+            },
+          },
+        },
+      ]);
+      const totalResp = await Jurnal.aggregate([
+        {
+          $match: {
+            kodePerkiraan: {
+              $gte: "101",
+              $lte: "101",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
       return res.status(200).json({
         code: 200,
         status: "OK",
-        totalDebet: totalDebet,
-        totalKredit: totalKredit,
-        saldo: saldo,
-        data: data,
+        totalDebet: totalResp[0].totalDebet,
+        totalKredit: totalResp[0].totalKredit,
+        saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
+        data: resp,
       });
     } catch (error) {
       res.status(400).json(err400(error));
     }
-},
+  },
  
 
 

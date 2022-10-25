@@ -1,6 +1,5 @@
-const { Jurnal, Perkiraan, Labarugi, Aruskas } = require("../models/schema");
-const { body, validationResult, param } = require("express-validator");
-const { err400 } = require("../helpers/messages");
+const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
+const { err400, err404 } = require("../helpers/messages");
 const { getByKode, getByName } = require("../models/perkiraan.models");
 const { getAll } = require("../models/JurnalUmun.model");
 const { incrementNumber, generateNumber } = require("../helpers/generate");
@@ -37,7 +36,6 @@ module.exports = {
     req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
-
   validateBeforeCreateJurnal: async (req, res, next) => {
     const {
       tanggalJurnal,
@@ -197,7 +195,7 @@ module.exports = {
             _id: null,
             totalDebet: {
               $sum: "$debet",
-            },  
+            },
             totalKredit: {
               $sum: "$kredit",
             },
@@ -288,29 +286,19 @@ module.exports = {
   },
   aggregateDebetKreditSaldo: async (req, res, next) => {
     try {
-
-      const getdata = true;
-
-      if( getdata == true) {
-        const resp = await Jurnal.aggregate([
-          {
-            $match : {kodePerkiraan : { $gt: 600, $lt : 800}},
-          },
-          {
-            $group: {
-              _id: null,
-  
-              totalDebet: {
-                $sum: "$debet",
-              },
-              totalKredit: {
-                $sum: "kredit",
-              },
+      const resp = await Labarugi.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
             },
           },
-        ]);
-      }
-      console.log(resp);
+        },
+      ]);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
       req.body.saldo = req.body.totalDebet - req.body.totalKredit;
@@ -365,7 +353,7 @@ module.exports = {
         },
         {
           $group: {
-            _id: null,
+            _id: "$_id",
             totalDebet: {
               $sum: "$lbDebet",
             },
@@ -414,10 +402,9 @@ module.exports = {
     }
   },
 
-
-  aggregateDebetKreditSaldoAruskas: async (req, res, next) => {
+  aggregateDebetKreditSaldoAruskas : async (req, res, next) => {
     try {
-      const resp = await Aruskas.aggregate([
+      const resp = await Labarugi.aggregate([
         {
           $group: {
             _id: null,

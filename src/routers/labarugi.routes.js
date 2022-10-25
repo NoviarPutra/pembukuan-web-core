@@ -14,7 +14,7 @@ const {
 } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [aggregateDebetKreditSaldo], getAlldata);
+router.get("/",  getAlldata);
 router.get("/search/:tahun", [aggregateForYearLabarugi], findYear);
 router.get("/search/:tahun/:bulan", [aggregateForMonthLabarugi], findMonth);
 router.get("/search/:tahun/:bulan/:hari", [aggregateForDateLabarugi], findDate);
