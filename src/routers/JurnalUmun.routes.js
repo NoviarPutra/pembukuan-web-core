@@ -18,17 +18,45 @@ const {
   aggregateForMonth,
   aggregateForDate,
   validateBeforeCreateJurnal,
+  authorizationToken,
+  isAdmin,
 } = require("../middlewares");
 const router = express.Router();
 
-// router.post("/", [validatejurnalBeforeCreate],  CreateJurnal );
-router.post("/", [validateBeforeCreateJurnal], CreateJurnal);
-router.get("/", [aggregateDebetKredit], getAlldata);
-router.get("/:nomerBukti", getdatabykode);
-router.put("/:_id", [validateJurnalBeforeUpdate], updatejurnal);
-router.delete("/delete/:_id", deletejurnal);
-router.get("/search/:tahun", [aggregateForYear], findYear);
-router.get("/search/:tahun/:bulan", [aggregateForMonth], findMonth);
-router.get("/search/:tahun/:bulan/:hari", [aggregateForDate], findDate);
+router.post(
+  "/",
+  [authorizationToken],
+  [isAdmin],
+  [validateBeforeCreateJurnal],
+  CreateJurnal
+);
+router.get("/", [authorizationToken], [aggregateDebetKredit], getAlldata);
+router.get("/:nomerBukti", [authorizationToken], getdatabykode);
+router.put(
+  "/:_id",
+  [authorizationToken],
+  [isAdmin],
+  [validateJurnalBeforeUpdate],
+  updatejurnal
+);
+router.delete("/delete/:_id", [authorizationToken], [isAdmin], deletejurnal);
+router.get(
+  "/search/:tahun",
+  [authorizationToken],
+  [aggregateForYear],
+  findYear
+);
+router.get(
+  "/search/:tahun/:bulan",
+  [authorizationToken],
+  [aggregateForMonth],
+  findMonth
+);
+router.get(
+  "/search/:tahun/:bulan/:hari",
+  [authorizationToken],
+  [aggregateForDate],
+  findDate
+);
 
 module.exports = router;

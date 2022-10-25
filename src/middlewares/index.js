@@ -1,12 +1,34 @@
 const bcrypt = require("bcrypt");
-const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
-const { err400, err404 } = require("../helpers/messages");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const { Jurnal, Labarugi } = require("../models/schema");
+const { err400, err404, err403 } = require("../helpers/messages");
 const { findBy } = require("../models/user.models");
 const { getByKode, getByName } = require("../models/perkiraan.models");
 const { getAll } = require("../models/JurnalUmun.model");
 const { incrementNumber, generateNumber } = require("../helpers/generate");
+dotenv.config();
 
 module.exports = {
+  authorizationToken: (req, res, next) => {
+    const headers = req.headers;
+    const token = headers.authorization && headers.authorization.split(" ")[1];
+    if (token === null)
+      return res.status(403).json(err403("Your token is null"));
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+      if (error) return res.status(403).json(err403("ACCESS DENIED"));
+
+      req.user = decoded;
+      next();
+    });
+  },
+  isAdmin: (req, res, next) => {
+    const user = req.user;
+    if (!user) return res.status(403).json(err403("Invalid token"));
+    if (user.role !== "ADMIN")
+      return res.status(403).json(err403("ADMIN ONLY"));
+    next();
+  },
   validateBeforeSignUp: async (req, res, next) => {
     try {
       const { username, email, password, role } = req.body;
@@ -482,8 +504,7 @@ module.exports = {
       console.log(error);
     }
   },
-
-  aggregateDebetKreditSaldoAruskas : async (req, res, next) => {
+  aggregateDebetKreditSaldoAruskas: async (req, res, next) => {
     try {
       const resp = await Labarugi.aggregate([
         {
