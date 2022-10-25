@@ -23,15 +23,18 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$namaPerkiraanJurnal",
+            _id: "$kodePekiraan",
             tanggalNeraca : {
-              
+              $push : "$tanggalJurnal"
+            },
+            namaPerkiraanJurnal : {
+              $push : "$namaPerkiraanJurnal"
             },
             Debet: {
-              $sum: "$debet",
+              $sum : "$debet",
             },
             Kredit: {
-              $sum: "$kredit",
+              $sum : "$kredit",
             },
           },
         },
