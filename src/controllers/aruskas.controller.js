@@ -1,5 +1,5 @@
-const { getAllLabarugi } = require("../models/labarugi.model");
-const { Labarugi, Jurnal } = require("../models/schema");
+const { getAllaruskas } = require("../models/aruskas.model");
+const { Aruskas, Jurnal} = require("../models/schema");
 const {
   success201,
   err400,
@@ -8,35 +8,43 @@ const {
 } = require("../helpers/messages");
 const { getAll } = require("../models/JurnalUmun.model");
 
+
 module.exports = {
+
   getAlldata: async (req, res) => {
     try {
       const resp = await Jurnal.aggregate([
         {
           $match: {
             kodePerkiraan: {
-              $gte: "600",
-              $lte: "799",
+              $gte: "101",
+              $lte: "101",
             },
           },
         },
         {
           $group: {
-            _id: "$namaPerkiraanJurnal",
-            kodePerkiraan : {
-              $push : "$kodePerkiraan",
+            _id: "$_id",
+            nomerJurnal : {
+              $push : "$nomerJurnal"
             },
-            tanggalLabaRugi : {
-              $push : "$tanggalJurnal",
+            tanggalAruskas : {
+              $push : "$tanggalJurnal"
             },
-            uraian : {
-              $push :  "$uraian"
+            nomerBukti : {
+              $push : "$nomerBukti"
+            },
+            Uraian : {
+              $push : "$uraian"
+            },
+            namaPerkiraanJurnal : {
+              $push : "$namaPerkiraanJurnal"
             },
             Debet: {
-              $sum: "$debet",
+              $push : "$debet",
             },
             Kredit: {
-              $sum: "$kredit",
+              $push : "$kredit",
             },
           },
         },
@@ -45,8 +53,8 @@ module.exports = {
         {
           $match: {
             kodePerkiraan: {
-              $gte: "600",
-              $lte: "799",
+              $gte: "101",
+              $lte: "101",
             },
           },
         },
@@ -74,6 +82,9 @@ module.exports = {
       res.status(400).json(err400(error));
     }
   },
+ 
+
+
   findDate: async (req, res) => {
     try {
       const { totalDebet, totalKredit, saldo } = req.body;

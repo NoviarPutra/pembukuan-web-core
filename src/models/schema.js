@@ -88,14 +88,58 @@ const LabaRugiSchema = Schema({
   lbKredit: Number,
 });
 
+const ArusKasSchema = Schema(
+  {
+    nomerJurnal: {
+      type: Number,
+      required: true,
+    },
+    tanggalJurnal: Date,
+    uraian: {
+      type: String,
+      required: true,
+    },
+    nomerBukti: {
+      type: String,
+      require: true,
+    },
+    kodePerkiraan: {
+      type: String,
+      required: true,
+    },
+    namaPerkiraanJurnal: {
+      type: String,
+      required: true,
+    },
+    debet: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    kredit: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    saldo: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  { versionKey: false }
+);
+
 userSchema.set("timestamps", true);
 perkiraanSchema.set("timestamps", true);
 JurnalUmunSchema.set("timestamp", true);
 LabaRugiSchema.set("timestamp", true);
+ArusKasSchema.set("timestamp", true);
 
 const User = mongoose.model("User", userSchema);
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
 const Labarugi = mongoose.model("Labarugi", LabaRugiSchema);
+const Aruskas = mongoose.model("arusKas", ArusKasSchema);
 
-module.exports = { User, Perkiraan, Jurnal, Labarugi };
+module.exports = { User, Perkiraan, Jurnal, Labarugi, Aruskas };

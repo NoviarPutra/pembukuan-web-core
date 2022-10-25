@@ -434,7 +434,7 @@ module.exports = {
         },
         {
           $group: {
-            _id: null,
+            _id: "$_id",
             totalDebet: {
               $sum: "$lbDebet",
             },
@@ -474,6 +474,30 @@ module.exports = {
         },
       ]);
 
+      req.body.totalDebet = resp[0].totalDebet;
+      req.body.totalKredit = resp[0].totalKredit;
+      req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  aggregateDebetKreditSaldoAruskas : async (req, res, next) => {
+    try {
+      const resp = await Labarugi.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
       req.body.totalDebet = resp[0].totalDebet;
       req.body.totalKredit = resp[0].totalKredit;
       req.body.saldo = req.body.totalDebet - req.body.totalKredit;
