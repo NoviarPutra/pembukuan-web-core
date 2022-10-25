@@ -1,10 +1,91 @@
+const bcrypt = require("bcrypt");
 const { Jurnal, Perkiraan, Labarugi } = require("../models/schema");
 const { err400, err404 } = require("../helpers/messages");
+const { findBy } = require("../models/user.models");
 const { getByKode, getByName } = require("../models/perkiraan.models");
 const { getAll } = require("../models/JurnalUmun.model");
 const { incrementNumber, generateNumber } = require("../helpers/generate");
 
 module.exports = {
+  validateBeforeSignUp: async (req, res, next) => {
+    try {
+      const { username, email, password, role } = req.body;
+      if (username === "" || username === undefined) {
+        return res.status(400).json(err400("username tidak boleh kosong"));
+      } else if (email === "" || email === undefined) {
+        return res.status(400).json(err400("email tidak boleh kosong"));
+      } else if (password === "" || password === undefined) {
+        return res.status(400).json(err400("password tidak boleh kosong"));
+      } else if (password.length < 6) {
+        return res.status(400).json(err400("password harus > 6 Karakter"));
+      }
+
+      // CHECK USERNAME
+      const checkUser = await findBy({ username: username });
+      if (checkUser)
+        return res.status(400).json(err400("Username sudah terdaftar"));
+
+      // CHECK EMAIL
+      const checkEmail = await findBy({ email: email });
+      if (checkEmail)
+        return res.status(400).json(err400("Email sudah terdaftar"));
+
+      // CHECK ROLE
+      if (role === undefined || role === "") {
+        req.body.password = bcrypt.hashSync(password, 10);
+        next();
+      } else {
+        req.body.password = bcrypt.hashSync(password, 10);
+        req.body.role = role.toUpperCase();
+        next();
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json(err400());
+    }
+  },
+  validateBeforeSignIn: async (req, res, next) => {
+    const { username, password } = req.body;
+    if (username === "" || username === undefined) {
+      return res.status(400).json(err400("username tidak boleh kosong"));
+    } else if (password === "" || password === undefined) {
+      return res.status(400).json(err400("password tidak boleh kosong"));
+    } else if (password.length < 6) {
+      return res.status(400).json(err400("password harus > 6 Karakter"));
+    }
+
+    // CHECK USER
+    const checkUser = await findBy({ username: username });
+    if (!checkUser)
+      return res.status(404).json(err404("Username tidak terdaftar"));
+
+    // CHECK PASSWORD
+    const match = await bcrypt.compare(password, checkUser.password);
+    if (!match) return res.status(400).json(err400("Password salah !!!"));
+
+    req.body.username = checkUser.username;
+    req.body.email = checkUser.email;
+    req.body.role = checkUser.role;
+    next();
+  },
+  validateBeforeUpdateUser: async (req, res, next) => {
+    try {
+      const { username, email, password, role } = req.body;
+      if (username === "" || username === undefined) {
+        return res.status(400).json(err400("username tidak boleh kosong"));
+      } else if (email === "" || email === undefined) {
+        return res.status(400).json(err400("email tidak boleh kosong"));
+      } else if (role === "" || role === undefined) {
+        return res.status(400).json(err400("role tidak boleh kosong"));
+      }
+
+      req.body.role = role.toUpperCase();
+      next();
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json(err400());
+    }
+  },
   validateBeforeCreatePerkiraan: async (req, res, next) => {
     const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
 
