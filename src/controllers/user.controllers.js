@@ -50,9 +50,12 @@ module.exports = {
         process.env.ACCESS_TOKEN_SECRET,
         options
       );
-      return res
-        .status(200)
-        .json({ code: 200, status: "OK", accessToken: accessToken });
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        token_type: "Bearer",
+        accessToken: accessToken,
+      });
     } catch (error) {
       console.log(error);
       return res.status(400).json(err400(error));
