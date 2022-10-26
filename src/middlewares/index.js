@@ -254,7 +254,7 @@ module.exports = {
     req.body.uraian = req.body.uraian.toUpperCase();
     req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
     req.body.kodePerkiraan = check.kode_perkiraan;
-    // req.body.nomerBukti = generateNumber(req.body.nomerBukti);
+    req.body.nomerBukti = generateNumber(req.body.nomerBukti);
     next();
   },
   aggregateDebetKredit: async (req, res, next) => {
