@@ -9,6 +9,7 @@ const {
   findMonth,
   findYear,
 } = require("../controllers/JurnalUmun.controller");
+const { ngetest } = require("../controllers/tester");
 
 const {
   // validatejurnalBeforeCreate,
@@ -22,6 +23,8 @@ const {
   isAdmin,
 } = require("../middlewares");
 const router = express.Router();
+
+router.get("/ngetest", ngetest);
 
 router.post(
   "/",

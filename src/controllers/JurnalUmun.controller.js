@@ -1,9 +1,4 @@
 const { Jurnal } = require("../models/schema");
-const {
-  insertlabarugi,
-  getByParamsLabarugi,
-  updatedatalabarugi,
-} = require("../models/labarugi.model");
 
 const {
   success201,
@@ -60,9 +55,7 @@ module.exports = {
       const { tahun, bulan, hari } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: {
-            tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
-          },
+          $match: { tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`) },
         },
       ]);
       if (resp[0])

@@ -189,7 +189,6 @@ module.exports = {
       return res.status(404).json(err404("Nama Perkiraan tidak valid"));
 
     // CHECK NOMER JURNAL
-
     const checkNomer = await getAll();
 
     if (checkNomer[0] === undefined) {
@@ -254,7 +253,7 @@ module.exports = {
     req.body.uraian = req.body.uraian.toUpperCase();
     req.body.namaPerkiraanJurnal = req.body.namaPerkiraanJurnal.toUpperCase();
     req.body.kodePerkiraan = check.kode_perkiraan;
-    req.body.nomerBukti = generateNumber(req.body.nomerBukti);
+    // req.body.nomerBukti = generateNumber(req.body.nomerBukti);
     next();
   },
   aggregateDebetKredit: async (req, res, next) => {
@@ -358,9 +357,7 @@ module.exports = {
       const { tahun, bulan, hari } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: {
-            tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
-          },
+          $match: { tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`) },
         },
         {
           $group: {
@@ -393,12 +390,8 @@ module.exports = {
         {
           $group: {
             _id: null,
-            totalDebet: {
-              $sum: "$lbDebet",
-            },
-            totalKredit: {
-              $sum: "$lbKredit",
-            },
+            totalDebet: { $sum: "$lbDebet" },
+            totalKredit: { $sum: "$lbKredit" },
           },
         },
       ]);
@@ -425,12 +418,8 @@ module.exports = {
         {
           $group: {
             _id: null,
-            totalDebet: {
-              $sum: "$lbDebet",
-            },
-            totalKredit: {
-              $sum: "$lbKredit",
-            },
+            totalDebet: { $sum: "$lbDebet" },
+            totalKredit: { $sum: "$lbKredit" },
           },
         },
       ]);
@@ -457,12 +446,8 @@ module.exports = {
         {
           $group: {
             _id: "$_id",
-            totalDebet: {
-              $sum: "$lbDebet",
-            },
-            totalKredit: {
-              $sum: "$lbKredit",
-            },
+            totalDebet: { $sum: "$lbDebet" },
+            totalKredit: { $sum: "$lbKredit" },
           },
         },
       ]);
@@ -486,12 +471,8 @@ module.exports = {
         {
           $group: {
             _id: null,
-            totalDebet: {
-              $sum: "$lbDebet",
-            },
-            totalKredit: {
-              $sum: "$lbKredit",
-            },
+            totalDebet: { $sum: "$lbDebet" },
+            totalKredit: { $sum: "$lbKredit" },
           },
         },
       ]);
@@ -510,12 +491,8 @@ module.exports = {
         {
           $group: {
             _id: null,
-            totalDebet: {
-              $sum: "$debet",
-            },
-            totalKredit: {
-              $sum: "$kredit",
-            },
+            totalDebet: { $sum: "$debet" },
+            totalKredit: { $sum: "$kredit" },
           },
         },
       ]);
