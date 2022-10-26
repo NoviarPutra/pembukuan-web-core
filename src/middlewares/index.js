@@ -172,8 +172,8 @@ module.exports = {
         .json(err400("salah satu debet / kredit tidak boleh 0"));
     } else if (nomerBukti === 0) {
       return res.status(400).json(err400("nomer bukti harus > 0"));
-    } else if (typeof nomerBukti !== "number") {
-      return res.status(400).json(err400("nomer bukti harus type Number"));
+      // } else if (typeof nomerBukti !== "number") {
+      //   return res.status(400).json(err400("nomer bukti harus type Number"));
     } else if (typeof debet !== "number") {
       return res.status(400).json(err400("debet harus type Number"));
     } else if (typeof kredit !== "number") {
