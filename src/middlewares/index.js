@@ -445,9 +445,13 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$_id",
-            totalDebet: { $sum: "$lbDebet" },
-            totalKredit: { $sum: "$lbKredit" },
+            _id: null,
+            totalDebet: {
+              $sum: "$lbDebet",
+            },
+            totalKredit: {
+              $sum: "$lbKredit",
+            },
           },
         },
       ]);
@@ -504,4 +508,41 @@ module.exports = {
       console.log(error);
     }
   },
+
+  aggregateDebetKreditLabarugi: async (req, res, next) => {
+    try {
+      const resp = await Jurnal.aggregate([
+        {
+          $match: {
+            kodePerkiraan: {
+                 $gte: "600",
+                 $lte: "799",
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalDebet: {
+              $sum: "$debet",
+            },
+            totalKredit: {
+              $sum: "$kredit",
+            },
+          },
+        },
+      ]);
+      if (resp[0]) {
+        req.body.totalDebet = resp[0].totalDebet;
+        req.body.totalKredit = resp[0].totalKredit;
+        req.body.saldo = req.body.totalDebet - req.body.totalKredit;
+      }
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
+
+
+

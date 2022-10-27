@@ -25,7 +25,7 @@ router.get("/", [authorizationToken], getAllPerkiraan);
 router.get("/search", [authorizationToken], seacrhPerkiraan);
 router.get("/:kode_perkiraan", [authorizationToken], getPerkiraanByKode);
 router.put(
-  "/:kode_perkiraan",
+  "/:_id",
   [authorizationToken],
   [isAdmin],
   [validateBeforeCreatePerkiraan],

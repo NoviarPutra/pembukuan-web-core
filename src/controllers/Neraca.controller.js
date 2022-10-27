@@ -23,7 +23,7 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$kodePekiraan",
+            _id: "$kodePerkiraan",
             tanggalNeraca : {
               $push : "$tanggalJurnal"
             },

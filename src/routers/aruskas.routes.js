@@ -1,5 +1,6 @@
 const express = require("express");
 const { getAlldata } = require("../controllers/aruskas.controller");
+
 const {
   aggregateDebetKreditSaldoAruskas,
   authorizationToken,
@@ -8,5 +9,6 @@ const {
 const router = express.Router();
 
 router.get("/", [authorizationToken], getAlldata);
+
 
 module.exports = router;

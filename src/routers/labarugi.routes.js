@@ -12,10 +12,11 @@ const {
   aggregateForYearLabarugi,
   aggregateForMonthLabarugi,
   authorizationToken,
+  aggregateDebetKreditLabarugi,
 } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [authorizationToken], getAlldata);
+router.get("/", [authorizationToken], [aggregateDebetKreditLabarugi], getAlldata);
 router.get(
   "/search/:tahun",
   [authorizationToken],
@@ -28,11 +29,7 @@ router.get(
   [aggregateForMonthLabarugi],
   findMonth
 );
-router.get(
-  "/search/:tahun/:bulan/:hari",
-  [authorizationToken],
-  [aggregateForDateLabarugi],
-  findDate
-);
+
+
 
 module.exports = router;
