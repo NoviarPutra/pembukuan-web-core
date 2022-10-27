@@ -12,6 +12,8 @@ const {
   updatedata,
   deletedata,
   getByParams,
+  matchBy,
+  matchAndGroupBy,
 } = require("../models/JurnalUmun.model");
 
 module.exports = {
@@ -51,50 +53,76 @@ module.exports = {
   },
   findDate: async (req, res) => {
     try {
-      const { totalDebet, totalKredit } = req.body;
       const { tahun, bulan, hari } = req.params;
-      const resp = await Jurnal.aggregate([
+      const DATE = `${tahun}-${bulan}-${hari}`;
+
+      // FIND
+      const resp = await matchBy({ tanggalJurnal: new Date(DATE) });
+
+      // HANDLE NOT FOUND
+      if (!resp[0]) {
+        return res
+          .status(404)
+          .json(err404("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
+      }
+
+      // HANDLE TOTAL
+      const total = await matchAndGroupBy(
+        { tanggalJurnal: new Date(DATE) },
         {
-          $match: { tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`) },
-        },
-      ]);
-      if (resp[0])
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          totalDebet: totalDebet,
-          totalKredit: totalKredit,
-          data: resp,
-        });
-      return res
-        .status(400)
-        .json(err400("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
+          _id: null,
+          totalDebet: { $sum: "$debet" },
+          totalKredit: { $sum: "$kredit" },
+        }
+      );
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].totalDebet,
+        totalKredit: total[0].totalKredit,
+        saldo: total[0].totalDebet - total[0].totalKredit,
+        data: resp,
+      });
     } catch (error) {
       return res.status(400).json(error);
     }
   },
   findMonth: async (req, res) => {
     try {
-      const { totalDebet, totalKredit } = req.body;
       const { tahun, bulan } = req.params;
-      const resp = await Jurnal.aggregate([
+      const DATE = {
+        $gte: new Date(`${tahun}-${bulan}-01`),
+        $lte: new Date(`${tahun}-${bulan}-31`),
+      };
+
+      // FIND
+      const resp = await matchBy({ tanggalJurnal: DATE });
+
+      // HANDLE NOT FOUND
+      if (!resp[0]) {
+        return res
+          .status(404)
+          .json(err404("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
+      }
+
+      // HANDLE TOTAL
+      const total = await matchAndGroupBy(
+        { tanggalJurnal: DATE },
         {
-          $match: {
-            tanggalJurnal: {
-              $gte: new Date(`${tahun}-${bulan}-01`),
-              $lte: new Date(`${tahun}-${bulan}-31`),
-            },
-          },
-        },
-      ]);
-      if (resp[0])
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          totalDebet: totalDebet,
-          totalKredit: totalKredit,
-          data: resp,
-        });
+          _id: null,
+          totalDebet: { $sum: "$debet" },
+          totalKredit: { $sum: "$kredit" },
+        }
+      );
+
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].totalDebet,
+        totalKredit: total[0].totalKredit,
+        saldo: total[0].totalDebet - total[0].totalKredit,
+        data: resp,
+      });
     } catch (error) {
       return res.status(400).json(error);
     }
@@ -102,25 +130,39 @@ module.exports = {
   findYear: async (req, res) => {
     try {
       const { tahun } = req.params;
-      const { totalDebet, totalKredit } = req.body;
-      const resp = await Jurnal.aggregate([
+      const DATE = {
+        $gte: new Date(`${tahun}-01-01`),
+        $lte: new Date(`${tahun}-12-31`),
+      };
+
+      // FIND
+      const resp = await matchBy({ tanggalJurnal: DATE });
+
+      // HANDLE NOT FOUND
+      if (!resp[0]) {
+        return res
+          .status(404)
+          .json(err404("Tahun / Bulan / Tanggal yang dicari kaga ada bang "));
+      }
+
+      // HANDLE TOTAL
+      const total = await matchAndGroupBy(
+        { tanggalJurnal: DATE },
         {
-          $match: {
-            tanggalJurnal: {
-              $gte: new Date(`${tahun}-01-01`),
-              $lte: new Date(`${tahun}-12-31`),
-            },
-          },
-        },
-      ]);
-      if (resp[0])
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          totalDebet: totalDebet,
-          totalKredit: totalKredit,
-          data: resp,
-        });
+          _id: null,
+          totalDebet: { $sum: "$debet" },
+          totalKredit: { $sum: "$kredit" },
+        }
+      );
+
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].totalDebet,
+        totalKredit: total[0].totalKredit,
+        saldo: total[0].totalDebet - total[0].totalKredit,
+        data: resp,
+      });
     } catch (error) {
       return res.status(400).json(error);
     }

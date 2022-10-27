@@ -1,16 +1,8 @@
-const { Aruskas, Jurnal} = require("../models/schema");
-const {
-  success201,
-  err400,
-  success200,
-  err404,
-} = require("../helpers/messages");
-
-
+const { Jurnal } = require("../models/schema");
+const { err400, err404 } = require("../helpers/messages");
 
 module.exports = {
-
-  getAlldataNeracaSaldo : async (req, res) => {
+  getAlldataNeracaSaldo: async (req, res) => {
     try {
       const resp = await Jurnal.aggregate([
         {
@@ -29,10 +21,10 @@ module.exports = {
               namaPerkiraan: "$namaPerkiraanJurnal",
             },
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -92,10 +84,10 @@ module.exports = {
           $group: {
             _id: "$namaPerkiraanJurnal",
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -113,7 +105,6 @@ module.exports = {
                 },
               },
               { kodePerkiraan: { $gte: "100", $lte: "799" } },
-      
             ],
           },
         },
@@ -160,10 +151,10 @@ module.exports = {
           $group: {
             _id: "$namaPerkiraanJurnal",
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -227,10 +218,10 @@ module.exports = {
           $group: {
             _id: "$namaPerkiraanJurnal",
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -272,5 +263,4 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
-
 };
