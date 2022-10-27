@@ -16,7 +16,7 @@ const {
 } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [authorizationToken], [aggregateDebetKreditLabarugi], getAlldata);
+router.get("/",  [aggregateDebetKreditLabarugi], getAlldata);
 router.get(
   "/search/:tahun",
   [authorizationToken],

@@ -61,7 +61,9 @@ module.exports = {
 
 
   findDate: async (req, res) => {
+   
     try {
+      const { tahun, bulan, hari } = req.params;
       const resp = await Jurnal.aggregate([
         {
           $match: {
@@ -69,10 +71,19 @@ module.exports = {
               $gte: "101",
               $lte: "101",
             },
-            tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`)
           },
         },
       ]);
+
+      // const date = await resp.aggregate([
+      //   {
+      //     $match: {
+      //       tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
+      //     },
+      //   },
+        
+      // ])
+
       const totalResp = await Jurnal.aggregate([
         {
           $match: {
@@ -80,7 +91,6 @@ module.exports = {
               $gte: "101",
               $lte: "101",
             },
-            tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
           },
         },
         {
@@ -95,7 +105,7 @@ module.exports = {
           },
         },
       ]);
-      
+      console.log(tahun)
       return res.status(200).json({
         code: 200,
         status: "OK",
@@ -106,39 +116,8 @@ module.exports = {
       });
     } catch (error) {
       res.status(400).json(err400(error));
-    }
-  },
+    }},
 
-  findMonth: async (req, res) => {
-    try {
-      const { totalDebet, totalKredit, saldo } = req.body;
-      const { tahun, bulan } = req.params;
-      const resp = await Jurnal.aggregate([
-        {
-          $match: {
-            tanggalLabaRugi: {
-              $gte: new Date(`${tahun}-${bulan}-01`),
-              $lte: new Date(`${tahun}-${bulan}-31`),
-            },
-          },
-        },
-      ]);
-      if (resp[0])
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          totalDebet: totalDebet,
-          totalKredit: totalKredit,
-          saldo: saldo,
-          data: resp,
-        });
-      return res
-        .status(400)
-        .json(err400("Tahun / Bulan yang dicari kaga ada bang "));
-    } catch (error) {
-      return res.status(400).json(err400(error));
-    }
-  },
   findYear: async (req, res) => {
     try {
       // const { totalDebet, totalKredit } = req.body;
