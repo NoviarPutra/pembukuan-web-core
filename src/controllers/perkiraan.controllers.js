@@ -16,7 +16,6 @@ const {
 module.exports = {
   createPerkiraan: async (req, res) => {
     try {
-      console.log(req.body);
       const resp = await insertPerkiraan(req.body);
       if (resp) return res.status(201).json(success201());
       return res.status(400).json(err400("Something went wrong"));
@@ -34,7 +33,8 @@ module.exports = {
   },
   getPerkiraanByKode: async (req, res) => {
     try {
-      const resp = await getByKode({ kode_perkiraan: id });
+      const { kode_perkiraan } = req.params;
+      const resp = await getByKode({ kode_perkiraan: kode_perkiraan });
       if (resp) return res.status(200).json(success200(resp));
       return res.status(404).json(err404());
     } catch (error) {
