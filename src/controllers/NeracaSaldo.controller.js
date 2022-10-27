@@ -30,9 +30,6 @@ module.exports = {
             Kredit: {
               $sum : "$kredit",
             },
-            Saldo : {
-              $subtract : ["$debet", "$kredit"]
-            },
           },
         },
       ]);
