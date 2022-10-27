@@ -1,4 +1,4 @@
-const { err400 } = require("../helpers/messages");
+const { err400, err404 } = require("../helpers/messages");
 const { Jurnal } = require("../models/schema");
 
 module.exports = {
@@ -74,6 +74,8 @@ module.exports = {
           },
         },
       ]).sort({ _id: "asc" });
+      if (!resp[0]) return res.status(404).json(err404());
+
       const total = await Jurnal.aggregate([
         {
           $match: {
