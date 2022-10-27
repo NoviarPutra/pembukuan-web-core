@@ -4,6 +4,7 @@ const {
   findDate,
   findMonth,
   findYear,
+  finddate,
 } = require("../controllers/labarugi.controller");
 
 
@@ -20,13 +21,15 @@ const router = express.Router();
 router.get("/", [authorizationToken], getAlldata);
 router.get(
   "/search/:tahun",
-  [authorizationToken],
-  [aggregateForYearLabarugi],
   findYear
 );
 router.get(
   "/search/:tahun/:bulan",
   findMonth
+);
+router.get(
+  "/search/:tahun/:bulan/:hari",
+  finddate
 );
 
 
