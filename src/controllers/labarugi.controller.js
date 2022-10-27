@@ -7,6 +7,7 @@ const {
   err404,
 } = require("../helpers/messages");
 const { getAll } = require("../models/JurnalUmun.model");
+const moment = require("moment")
 
 module.exports = {
 
@@ -82,34 +83,59 @@ module.exports = {
 
   findMonth: async (req, res) => {
     try {
-      const { totalDebet, totalKredit, saldo } = req.body;
       const { tahun, bulan } = req.params;
-      const resp = await Labarugi.aggregate([
+      const resp = await Jurnal.aggregate([
         {
-          $match: {
-            tanggalLabaRugi: {
-              $gte: new Date(`${tahun}-${bulan}-01`),
-              $lte: new Date(`${tahun}-${bulan}-31`),
+          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+        },
+        {
+          $group: {
+            _id: {
+              tanggalJurnal: "$tanggalJurnal",
+              kodePerkiraan: "$kodePerkiraan",
+              namaPerkiraan: "$namaPerkiraanJurnal",
             },
+            debet: { $sum: "$debet" },
+            kredit: { $sum: "$kredit" },
           },
         },
-      ]);
-      if (resp[0])
+      ]).sort({ _id: "asc" });
+
+      var startDate = `${tahun}-${bulan}-01`;
+      var endDate = `${tahun}-${bulan}-31`;
+      var resultProductData = resp.filter(
+        (data) => {
+            return(moment(data._id.tanggalJurnal).format('YYYY-MM-DD') > startDate &&
+             moment(data._id.tanggalJurnal).format('YYYY-MM-DD') < endDate);
+        }
+        );
+      
+        const data =  resultProductData.aggregate([
+          {
+            $group: {
+              _id: null,
+              totalDebet: {
+                $sum: "$debet",
+              },
+              totalKredit: {
+                $sum: "$kredit",
+              },
+            },
+          },
+        ]);
+      console.log(data)
+
         return res.status(200).json({
           code: 200,
           status: "OK",
-          totalDebet: totalDebet,
-          totalKredit: totalKredit,
-          saldo: saldo,
-          data: resp,
+          data: resultProductData
         });
-      return res
-        .status(400)
-        .json(err400("Tahun / Bulan yang dicari kaga ada bang "));
+
     } catch (error) {
       return res.status(400).json(err400(error));
     }
   },
+
   findYear: async (req, res) => {
     try {
       // const { totalDebet, totalKredit } = req.body;

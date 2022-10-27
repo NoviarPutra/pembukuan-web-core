@@ -26,8 +26,6 @@ router.get(
 );
 router.get(
   "/search/:tahun/:bulan",
-  [authorizationToken],
-  [aggregateForMonthLabarugi],
   findMonth
 );
 
