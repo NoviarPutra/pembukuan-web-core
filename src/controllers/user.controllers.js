@@ -37,11 +37,7 @@ module.exports = {
   signIn: async (req, res) => {
     try {
       const { username, email, role } = req.body;
-      const payload = {
-        username: username,
-        email: email,
-        role: role,
-      };
+      const payload = { username: username, email: email, role: role };
       const options = {
         expiresIn: "1d",
       };

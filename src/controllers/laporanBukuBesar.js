@@ -8,8 +8,8 @@ const document = new PDFDocument({ size: "A4", font: "Helvetica" });
 module.exports = {
   getAllLaporan: async (req, res) => {
     try {
-      let buffers = [];
-      const fileName = `Laporan-Buku-Besar` + new Date().getTime();
+      // let buffers = [];
+      const fileName = `Laporan-Buku-Besar`;
       // const writeStream = fs.createWriteStream(
       //   "./src/report/" + fileName + ".pdf"
       // );
@@ -19,24 +19,25 @@ module.exports = {
       // });
       // document.pipe(writeStream);
       // document.pipe(res);
-      genCommonHeader(document, "Laporan Buku Besar");
-      document.on("data", buffers.push.bind(buffers));
-      document.on(
-        "end",
-        () => {
-          let pdfData = Buffer.concat(buffers);
-          res
-            .writeHead(200, {
-              "Content-Length": Buffer.byteLength(pdfData),
-              "Content-Type": "application/pdf",
-              "Content-disposition": `attachment;filename=${fileName}.pdf`,
-            })
-            .end(pdfData);
-        },
-        (err) => console.log(err)
-      );
+      // document.on("data", buffers.push.bind(buffers));
+      // document.on("end", () => {
+      //   let pdfData = Buffer.concat(buffers);
+      //   res
+      //     .writeHead(200, {
+      //       "Content-Length": Buffer.byteLength(pdfData),
+      //       "Content-Type": "application/pdf",
+      //       "Content-disposition": `attachment;filename=${fileName}.pdf`,
+      //     })
+      //     .end(pdfData);
+      // });
+      const stream = res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment;filename=laporan-buku-besar.pdf",
+      });
+      document.on("data", (data) => stream.write(data));
+      document.on("end", () => stream.end());
+      genCommonHeader(document, new Date());
       document.end();
-      // writeStream.on("error", (err) => console.log(err));
     } catch (error) {
       console.log(error);
     }
