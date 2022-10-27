@@ -4,6 +4,6 @@ const { ngetest, testFindYear } = require("../controllers/tester");
 const router = express.Router();
 
 router.get("/", ngetest);
-router.get("/search/:year", testFindYear);
+router.get("/search/:tahun", testFindYear);
 
 module.exports = router;

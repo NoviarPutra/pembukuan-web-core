@@ -47,9 +47,20 @@ module.exports = {
   },
   testFindYear: async (req, res) => {
     try {
+      const { tahun } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-01-01`),
+                  $lte: new Date(`${tahun}-12-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
         },
         {
           $group: {
@@ -65,7 +76,17 @@ module.exports = {
       ]).sort({ _id: "asc" });
       const total = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-01-01`),
+                  $lte: new Date(`${tahun}-12-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
         },
         {
           $group: {
