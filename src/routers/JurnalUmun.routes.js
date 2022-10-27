@@ -28,8 +28,7 @@ router.get("/ngetest", ngetest);
 
 router.post(
   "/",
-  [authorizationToken],
-  [isAdmin],
+  
   [validateBeforeCreateJurnal],
   CreateJurnal
 );

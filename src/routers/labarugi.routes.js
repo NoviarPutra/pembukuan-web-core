@@ -6,6 +6,7 @@ const {
   findYear,
 } = require("../controllers/labarugi.controller");
 
+
 const {
   aggregateDebetKreditSaldo,
   aggregateForDateLabarugi,
@@ -16,7 +17,7 @@ const {
 } = require("../middlewares");
 const router = express.Router();
 
-router.get("/",  [aggregateDebetKreditLabarugi], getAlldata);
+router.get("/", [authorizationToken], getAlldata);
 router.get(
   "/search/:tahun",
   [authorizationToken],

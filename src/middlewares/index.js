@@ -445,13 +445,15 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$_id",
+
+            _id: null,
             totalDebet: {
               $sum: "$lbDebet",
             },
             totalKredit: {
               $sum: "$lbKredit",
             },
+>>>>>>>>> Temporary merge branch 2
           },
         },
       ]);
