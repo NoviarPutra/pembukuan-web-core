@@ -453,7 +453,7 @@ module.exports = {
             totalKredit: {
               $sum: "$lbKredit",
             },
->>>>>>>>> Temporary merge branch 2
+
           },
         },
       ]);
