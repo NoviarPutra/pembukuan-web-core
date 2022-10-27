@@ -81,12 +81,22 @@ module.exports = {
 
   },
 
-  finddate: async (req, res) => {
+  FindDate: async (req, res) => {
     try {
-      const { tahun, bulan, hari} = req.params;
+      const { tahun, bulan, hari } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-${bulan}-${hari}`),
+                  $lte: new Date(`${tahun}-${bulan}-${hari}`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
         },
         {
           $group: {
@@ -100,34 +110,58 @@ module.exports = {
           },
         },
       ]).sort({ _id: "asc" });
-
-      var startDate = `${tahun}-${bulan}-${hari}`;
-      var endDate = `${tahun}-${bulan}-${hari}`;
-      var resultProductData = resp.filter(
-        (data) => {
-            return(moment(data._id.tanggalJurnal).format('YYYY-MM-DD') == startDate &&
-             moment(data._id.tanggalJurnal).format('YYYY-MM-DD') == endDate);
-        }
-        );
-      
-
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          data: resultProductData
-        });
-
+      const total = await Jurnal.aggregate([
+        {
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-${bulan}-${hari}`),
+                  $lte: new Date(`${tahun}-${bulan}-${hari}`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            debet: { $sum: "$debet" },
+            kredit: { $sum: "$kredit" },
+          },
+        },
+      ]);
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].debet,
+        totalKredit: total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
+        data: resp,
+      });
     } catch (error) {
+      console.log(error);
       return res.status(400).json(err400(error));
     }
   },
 
-  findMonth: async (req, res) => {
+  FindMonth: async (req, res) => {
     try {
       const { tahun, bulan } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-${bulan}-01`),
+                  $lte: new Date(`${tahun}-${bulan}-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
         },
         {
           $group: {
@@ -141,34 +175,58 @@ module.exports = {
           },
         },
       ]).sort({ _id: "asc" });
-
-      var startDate = `${tahun}-${bulan}-01`;
-      var endDate = `${tahun}-${bulan}-31`;
-      var resultProductData = resp.filter(
-        (data) => {
-            return(moment(data._id.tanggalJurnal).format('YYYY-MM-DD') > startDate &&
-             moment(data._id.tanggalJurnal).format('YYYY-MM-DD') < endDate);
-        }
-        );
-      
-
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          data: resultProductData
-        });
-
+      const total = await Jurnal.aggregate([
+        {
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-${bulan}-01`),
+                  $lte: new Date(`${tahun}-${bulan}-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            debet: { $sum: "$debet" },
+            kredit: { $sum: "$kredit" },
+          },
+        },
+      ]);
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].debet,
+        totalKredit: total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
+        data: resp,
+      });
     } catch (error) {
+      console.log(error);
       return res.status(400).json(err400(error));
     }
   },
 
-  findYear: async (req, res) => {
+  FindYear: async (req, res) => {
     try {
       const { tahun } = req.params;
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-01-01`),
+                  $lte: new Date(`${tahun}-12-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
         },
         {
           $group: {
@@ -182,25 +240,38 @@ module.exports = {
           },
         },
       ]).sort({ _id: "asc" });
-      
-
-      var startDate = `${tahun}-01-01`;
-      var endDate = `${tahun}-12-31`;
-      var resultProductData = resp.filter(
-        (data) => {
-          
-            return(moment(data._id.tanggalJurnal).format('YYYY-MM-DD') > startDate &&
-             moment(data._id.tanggalJurnal).format('YYYY-MM-DD') < endDate);
-        }
-        );
-
-        return res.status(200).json({
-          code: 200,
-          status: "OK",
-          data: resultProductData
-        });
-
+      const total = await Jurnal.aggregate([
+        {
+          $match: {
+            $and: [
+              {
+                tanggalJurnal: {
+                  $gte: new Date(`${tahun}-01-01`),
+                  $lte: new Date(`${tahun}-12-31`),
+                },
+              },
+              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+            ],
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            debet: { $sum: "$debet" },
+            kredit: { $sum: "$kredit" },
+          },
+        },
+      ]);
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].debet,
+        totalKredit: total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
+        data: resp,
+      });
     } catch (error) {
+      console.log(error);
       return res.status(400).json(err400(error));
     }
   }
