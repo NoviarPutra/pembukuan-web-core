@@ -6,8 +6,10 @@ const userRouter = require("./user.routes");
 const arusKasRouter = require("./aruskas.routes");
 const neracaRouter = require("./neraca.routes");
 const neracaSaldoRouter = require("./NeracaSaldo.routes");
+const testerRouter = require("./tester.routes");
 
 module.exports = (app) => {
+  app.use("/api/v1/tester", testerRouter);
   app.use("/api/v1/user", userRouter);
   app.use("/api/v1/perkiraan", perkiraanRouter);
   app.use("/api/v1/jurnal", jurnalRouter);

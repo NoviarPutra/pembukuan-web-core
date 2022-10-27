@@ -445,7 +445,6 @@ module.exports = {
         },
         {
           $group: {
-
             _id: null,
             totalDebet: {
               $sum: "$lbDebet",
@@ -453,7 +452,6 @@ module.exports = {
             totalKredit: {
               $sum: "$lbKredit",
             },
->>>>>>>>> Temporary merge branch 2
           },
         },
       ]);
@@ -517,8 +515,8 @@ module.exports = {
         {
           $match: {
             kodePerkiraan: {
-                 $gte: "600",
-                 $lte: "799",
+              $gte: "600",
+              $lte: "799",
             },
           },
         },
@@ -545,6 +543,3 @@ module.exports = {
     }
   },
 };
-
-
-
