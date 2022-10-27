@@ -12,6 +12,11 @@ module.exports = {
       return { code: 400, status: "BAD REQUEST", message: message };
     return { code: 400, status: "BAD REQUEST" };
   },
+  err403: (message) => {
+    if (message !== undefined)
+      return { code: 403, status: "FORBIDDEN", message: message };
+    return { code: 403, status: "FORBIDDEN" };
+  },
   err404: (message) => {
     if (message !== undefined)
       return { code: 404, status: "NOT FOUND", message: message };
