@@ -10,7 +10,7 @@ const { incrementNumber, generateNumber } = require("../helpers/generate");
 dotenv.config();
 
 module.exports = {
-  authorizationToken: (req, res, next) => {
+  authToken: (req, res, next) => {
     const headers = req.headers;
     const token = headers.authorization && headers.authorization.split(" ")[1];
     if (token === null)
@@ -29,7 +29,7 @@ module.exports = {
       return res.status(403).json(err403("ADMIN ONLY"));
     next();
   },
-  validateBeforeSignUp: async (req, res, next) => {
+  validateSignUp: async (req, res, next) => {
     try {
       const { username, email, password, role } = req.body;
       if (username === "" || username === undefined) {
@@ -66,7 +66,7 @@ module.exports = {
       return res.status(400).json(err400());
     }
   },
-  validateBeforeSignIn: async (req, res, next) => {
+  validateSignIn: async (req, res, next) => {
     const { username, password } = req.body;
     if (username === "" || username === undefined) {
       return res.status(400).json(err400("username tidak boleh kosong"));
@@ -90,7 +90,7 @@ module.exports = {
     req.body.role = checkUser.role;
     next();
   },
-  validateBeforeUpdateUser: async (req, res, next) => {
+  validateUpdateUser: async (req, res, next) => {
     try {
       const { username, email, password, role } = req.body;
       if (username === "" || username === undefined) {
@@ -108,7 +108,7 @@ module.exports = {
       return res.status(400).json(err400());
     }
   },
-  validateBeforeCreatePerkiraan: async (req, res, next) => {
+  validateCreatePerkiraan: async (req, res, next) => {
     const { kode_perkiraan, nama_perkiraan, kelompok_akun } = req.body;
 
     // CHECK LIMIT KODE PERKIRAAN
@@ -139,7 +139,7 @@ module.exports = {
     req.body.kelompok_akun = kelompok_akun.toUpperCase();
     next();
   },
-  validateBeforeCreateJurnal: async (req, res, next) => {
+  validateCreateJurnal: async (req, res, next) => {
     const {
       tanggalJurnal,
       uraian,
@@ -209,7 +209,7 @@ module.exports = {
       next();
     }
   },
-  validateJurnalBeforeUpdate: async (req, res, next) => {
+  validateUpdateJurnal: async (req, res, next) => {
     const {
       tanggalJurnal,
       uraian,
@@ -384,5 +384,4 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
-  
 };

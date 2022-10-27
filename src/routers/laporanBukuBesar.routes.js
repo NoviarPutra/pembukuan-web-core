@@ -3,10 +3,10 @@ const {
   getAllLaporan,
   getAllByPerkiraan,
 } = require("../controllers/laporanBukuBesar");
-const { authorizationToken } = require("../middlewares");
+const { authToken } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [authorizationToken], getAllLaporan);
-router.get("/:perkiraan", [authorizationToken], getAllByPerkiraan);
+router.get("/", [authToken], getAllLaporan);
+router.get("/:perkiraan", [authToken], getAllByPerkiraan);
 
 module.exports = router;

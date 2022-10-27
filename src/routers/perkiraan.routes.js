@@ -8,34 +8,25 @@ const {
   seacrhPerkiraan,
 } = require("../controllers/perkiraan.controllers");
 const {
-  validateBeforeCreatePerkiraan,
-  authorizationToken,
+  validateCreatePerkiraan,
+  authToken,
   isAdmin,
 } = require("../middlewares");
 const router = express.Router();
 
 router.post(
   "/",
-  [authorizationToken],
-  [isAdmin],
-  [validateBeforeCreatePerkiraan],
+  [authToken, isAdmin, validateCreatePerkiraan],
   createPerkiraan
 );
-router.get("/", [authorizationToken], getAllPerkiraan);
-router.get("/search", [authorizationToken], seacrhPerkiraan);
-router.get("/:kode_perkiraan", [authorizationToken], getPerkiraanByKode);
+router.get("/", [authToken], getAllPerkiraan);
+router.get("/search", [authToken], seacrhPerkiraan);
+router.get("/:kode_perkiraan", [authToken], getPerkiraanByKode);
 router.put(
-  "/:_id",
-  [authorizationToken],
-  [isAdmin],
-  [validateBeforeCreatePerkiraan],
+  "/:kode_perkiraan",
+  [authToken, isAdmin, validateCreatePerkiraan],
   updatePerkiraan
 );
-router.delete(
-  "/delete/:kode_perkiraan",
-  [authorizationToken],
-  [isAdmin],
-  removePerkiraan
-);
+router.delete("/delete/:kode_perkiraan", [authToken, isAdmin], removePerkiraan);
 
 module.exports = router;

@@ -1,38 +1,17 @@
 const express = require("express");
 const {
- 
-  FindMonth, FindDate, FindYear, getAlldata,
+  FindMonth,
+  FindDate,
+  FindYear,
+  getAlldata,
 } = require("../controllers/labarugi.controller");
 
-
-
-const {
-  aggregateDebetKreditSaldo,
-  aggregateForDateLabarugi,
-  aggregateForYearLabarugi,
-  aggregateForMonthLabarugi,
-  authorizationToken,
-  aggregateDebetKreditLabarugi,
-} = require("../middlewares");
+const { authToken } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [authorizationToken], getAlldata);
-router.get(
-  "/search/:tahun",
-  [authorizationToken],
-  FindYear
-);
-router.get(
-  "/search/:tahun/:bulan",
-  [authorizationToken],
-  FindMonth
-);
-router.get(
-  "/search/:tahun/:bulan/:hari",
-  [authorizationToken],
-  FindDate
-);
-
-
+router.get("/", [authToken], getAlldata);
+router.get("/search/:tahun", [authToken], FindYear);
+router.get("/search/:tahun/:bulan", [authToken], FindMonth);
+router.get("/search/:tahun/:bulan/:hari", [authToken], FindDate);
 
 module.exports = router;

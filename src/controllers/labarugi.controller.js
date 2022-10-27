@@ -7,12 +7,9 @@ const {
   err404,
 } = require("../helpers/messages");
 const { getAll } = require("../models/JurnalUmun.model");
-const moment = require("moment")
 
 module.exports = {
-
-
-  getAlldata : async(req, res) => {
+  getAlldata: async (req, res) => {
     try {
       const resp = await Jurnal.aggregate([
         {
@@ -54,33 +51,7 @@ module.exports = {
       console.log(error);
       return res.status(400).json(err400(error));
     }
-    // try {
-    //   const { totalDebet, totalKredit, saldo } = req.body;
-    //   const data = await getAll()
-    //   // console.log(data);
-    //   const filterData = data.filter((dataJurnal) => dataJurnal.kodePerkiraan < 799 && dataJurnal.kodePerkiraan > 600).map((data) => ({
-    //     "tanggalLabaRugi" : data.tanggalJurnal,
-    //     "kodePerkiraan" : data.kodePerkiraan,
-    //     "NamaPerkiraan" : data.namaPerkiraanJurnal,
-    //     "Debet" : data.debet,
-    //     "Kredit" : data.kredit,
-    //   }))
-    //   // console.log(filterData)
-
-    //   return res.status(200).json({
-    //     code: 200,
-    //     status: "OK",
-    //     totalDebet: totalDebet,
-    //     totalKredit: totalKredit,
-    //     saldo : saldo,
-    //     data: filterData,
-    //   });
-    // } catch {
-    //   res.status(400).json(err400(error));
-    // }
-
   },
-
   FindDate: async (req, res) => {
     try {
       const { tahun, bulan, hari } = req.params;
@@ -115,10 +86,7 @@ module.exports = {
           $match: {
             $and: [
               {
-                tanggalJurnal: {
-                  $gte: new Date(`${tahun}-${bulan}-${hari}`),
-                  $lte: new Date(`${tahun}-${bulan}-${hari}`),
-                },
+                tanggalJurnal: new Date(`${tahun}-${bulan}-${hari}`),
               },
               { kodePerkiraan: { $gte: "600", $lte: "799" } },
             ],
@@ -274,6 +242,5 @@ module.exports = {
       console.log(error);
       return res.status(400).json(err400(error));
     }
-  }
+  },
 };
-

@@ -12,50 +12,27 @@ const {
 
 const {
   // validatejurnalBeforeCreate,
-  validateJurnalBeforeUpdate,
+  validateUpdateJurnal,
   aggregateDebetKredit,
   aggregateForYear,
   aggregateForMonth,
   aggregateForDate,
-  validateBeforeCreateJurnal,
-  authorizationToken,
+  validateCreateJurnal,
+  authToken,
   isAdmin,
 } = require("../middlewares");
 const router = express.Router();
 
-router.post(
-  "/",
-  [authorizationToken],
-  [isAdmin],
-  [validateBeforeCreateJurnal],
-  CreateJurnal
-);
-router.get("/", [authorizationToken], [aggregateDebetKredit], getAlldata);
-router.get("/:nomerBukti", [authorizationToken], getdatabykode);
-router.put(
-  "/:_id",
-  [authorizationToken],
-  [isAdmin],
-  [validateJurnalBeforeUpdate],
-  updatejurnal
-);
-router.delete("/delete/:_id", [authorizationToken], [isAdmin], deletejurnal);
-router.get(
-  "/search/:tahun",
-  [authorizationToken],
-  [aggregateForYear],
-  findYear
-);
-router.get(
-  "/search/:tahun/:bulan",
-  [authorizationToken],
-  [aggregateForMonth],
-  findMonth
-);
+router.post("/", [authToken, isAdmin, validateCreateJurnal], CreateJurnal);
+router.get("/", [authToken, aggregateDebetKredit], getAlldata);
+router.get("/:nomerBukti", [authToken], getdatabykode);
+router.put("/:_id", [authToken, isAdmin, validateUpdateJurnal], updatejurnal);
+router.delete("/delete/:_id", [authToken, isAdmin], deletejurnal);
+router.get("/search/:tahun", [authToken, aggregateForYear], findYear);
+router.get("/search/:tahun/:bulan", [authToken, aggregateForMonth], findMonth);
 router.get(
   "/search/:tahun/:bulan/:hari",
-  [authorizationToken],
-  [aggregateForDate],
+  [authToken, aggregateForDate],
   findDate
 );
 
