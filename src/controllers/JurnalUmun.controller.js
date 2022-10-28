@@ -43,9 +43,25 @@ module.exports = {
   getdatabykode: async (req, res) => {
     try {
       const id = req.params.nomerBukti;
-      const data = await getByParams({ kodePerkiraan: id });
-      if (data) return res.status(200).json(success200(data));
-      return res.status(404).json(err404());
+      const data = await matchBy({ kodePerkiraan: id });
+      if (!data[0]) return res.status(404).json(err404());
+      const total = await matchAndGroupBy(
+        { kodePerkiraan: id },
+        {
+          _id: null,
+          totalDebet: { $sum: "$debet" },
+          totalKredit: { $sum: "$kredit" },
+        }
+      );
+      console.log(data, total);
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        totalDebet: total[0].totalDebet,
+        totalKredit: total[0].totalKredit,
+        totalSaldo: total[0].totalDebet - total[0].totalKredit,
+        data: data,
+      });
     } catch (error) {
       return res.status(400).json(err400(error));
     }
