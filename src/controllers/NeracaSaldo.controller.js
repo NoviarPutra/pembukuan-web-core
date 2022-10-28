@@ -1,16 +1,8 @@
-const { Aruskas, Jurnal} = require("../models/schema");
-const {
-  success201,
-  err400,
-  success200,
-  err404,
-} = require("../helpers/messages");
-
-
+const { Jurnal } = require("../models/schema");
+const { err400, err404 } = require("../helpers/messages");
 
 module.exports = {
-
-  getAlldataNeracaSaldo : async (req, res) => {
+  getAlldataNeracaSaldo: async (req, res) => {
     try {
       const resp = await Jurnal.aggregate([
         {
@@ -24,15 +16,14 @@ module.exports = {
         {
           $group: {
             _id: {
-              tanggalJurnal: "$tanggalJurnal",
               kodePerkiraan: "$kodePerkiraan",
               namaPerkiraan: "$namaPerkiraanJurnal",
             },
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -63,7 +54,7 @@ module.exports = {
         status: "OK",
         totalDebet: totalResp[0].totalDebet,
         totalKredit: totalResp[0].totalKredit,
-        saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
+        Saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
         data: resp,
       });
     } catch (error) {
@@ -90,12 +81,15 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$namaPerkiraanJurnal",
+            _id: {
+              kodePerkiraan: "$kodePerkiraan",
+              namaPerkiraan: "$namaPerkiraanJurnal",
+            },
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -113,7 +107,6 @@ module.exports = {
                 },
               },
               { kodePerkiraan: { $gte: "100", $lte: "799" } },
-      
             ],
           },
         },
@@ -130,7 +123,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
@@ -158,12 +151,15 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$namaPerkiraanJurnal",
+            _id: {
+              kodePerkiraan: "$kodePerkiraan",
+              namaPerkiraan: "$namaPerkiraanJurnal",
+            },
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -197,7 +193,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
@@ -225,12 +221,15 @@ module.exports = {
         },
         {
           $group: {
-            _id: "$namaPerkiraanJurnal",
+            _id: {
+              kodePerkiraan: "$kodePerkiraan",
+              namaPerkiraan: "$namaPerkiraanJurnal",
+            },
             Debet: {
-              $sum : "$debet",
+              $sum: "$debet",
             },
             Kredit: {
-              $sum : "$kredit",
+              $sum: "$kredit",
             },
           },
         },
@@ -264,7 +263,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
@@ -272,5 +271,4 @@ module.exports = {
       return res.status(400).json(err400(error));
     }
   },
-
 };

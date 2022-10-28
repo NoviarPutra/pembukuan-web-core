@@ -1,12 +1,11 @@
-const { getAllaruskas } = require("../models/aruskas.model");
-const { Aruskas, Jurnal} = require("../models/schema");
+const { Jurnal } = require("../models/schema");
 const {
   success201,
   err400,
   success200,
   err404,
 } = require("../helpers/messages");
-const { getAll } = require("../models/JurnalUmun.model");
+
 
 
 module.exports = {

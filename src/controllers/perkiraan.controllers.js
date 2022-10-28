@@ -64,7 +64,11 @@ module.exports = {
           kelompok_akun: kelompok_akun.toUpperCase(),
         }
       );
-      if (resp) return res.status(200).json(success200(req.body));
+      const newData = await getByKode({ kode_perkiraan: kode_perkiraan });
+      if (resp)
+        return res
+          .status(200)
+          .json({ code: 200, status: "OK", oldData: resp, newData: newData });
       return res.status(404).json(err404());
     } catch (error) {
       return res.status(400).json(err400(error));

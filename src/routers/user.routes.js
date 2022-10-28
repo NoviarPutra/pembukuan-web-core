@@ -7,16 +7,16 @@ const {
   updateUser,
 } = require("../controllers/user.controllers");
 const {
-  validateBeforeSignUp,
-  validateBeforeSignIn,
-  validateBeforeUpdateUser,
+  validateSignUp,
+  validateSignIn,
+  validateUpdateUser,
 } = require("../middlewares");
 const router = express.Router();
 
 router.get("/", getAllUsers);
-router.post("/signup", [validateBeforeSignUp], signUp);
-router.post("/signin", [validateBeforeSignIn], signIn);
-router.put("/:id", [validateBeforeUpdateUser], updateUser);
+router.post("/signup", [validateSignUp], signUp);
+router.post("/signin", [validateSignIn], signIn);
+router.put("/:id", [validateUpdateUser], updateUser);
 router.delete("/delete/:id", removeUser);
 
 module.exports = router;

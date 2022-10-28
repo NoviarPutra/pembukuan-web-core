@@ -1,25 +1,17 @@
 const express = require("express");
-const { getAlldataNeraca, FindYear, FindMonth, FindDate } = require("../controllers/Neraca.controller");
-const { authorizationToken } = require("../middlewares");
+const {
+  getAlldataNeraca,
+  FindYear,
+  FindMonth,
+  FindDate,
+} = require("../controllers/Neraca.controller");
+const { authToken } = require("../middlewares");
 
 const router = express.Router();
 
-router.get("/", [authorizationToken],  getAlldataNeraca);
-router.get(
-    "/search/:tahun",
-    [authorizationToken],
-    FindYear
-  );
-  router.get(
-    "/search/:tahun/:bulan",
-    [authorizationToken],
-    FindMonth
-  );
-  router.get(
-    "/search/:tahun/:bulan/:hari",
-    [authorizationToken],
-    FindDate
-  );
-  
+router.get("/", [authToken], getAlldataNeraca);
+router.get("/search/:tahun", [authToken], FindYear);
+router.get("/search/:tahun/:bulan", [authToken], FindMonth);
+router.get("/search/:tahun/:bulan/:hari", [authToken], FindDate);
 
 module.exports = router;

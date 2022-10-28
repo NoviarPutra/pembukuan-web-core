@@ -40,4 +40,4 @@ const User = mongoose.model("User", userSchema);
 const Perkiraan = mongoose.model("Perkiraan", perkiraanSchema);
 const Jurnal = mongoose.model("jurnalUmum", JurnalUmunSchema);
 
-module.exports = { User, Perkiraan, Jurnal, Labarugi, Aruskas };
+module.exports = { User, Perkiraan, Jurnal };
