@@ -38,7 +38,6 @@ module.exports = {
   genTableData: (doc, y, data) => {
     const date = data.tanggalJurnal.toString();
     const formatDate = date.split("07:00:00");
-    // console.log(data.tanggalJurnal, formatDate[0]);
 
     doc
       .fontSize(10)
@@ -53,6 +52,49 @@ module.exports = {
       .moveDown();
   },
   genResult: (doc, data) => {
+    doc
+      .fontSize(10)
+      .text("Total Debet = ", 10, 470)
+      .text(data.totalDebet, 80, 470)
+      .moveDown();
+    doc
+      .fontSize(10)
+      .text("Total Kredit = ", 10, 490)
+      .text(data.totalKredit, 80, 490)
+      .moveDown();
+    doc
+      .fontSize(10)
+      .text("Total Saldo = ", 10, 510)
+      .text(data.totalSaldo, 80, 510)
+      .moveDown();
+  },
+  genTableRowAggre: (doc, y) => {
+    doc
+      .fontSize(10)
+      .text("Tanggal Jurnal", 50, y)
+      .text("Kode Perkiraan", 180, y)
+      .text("Nama Perkiraan", 300, y)
+      .text("Debet", 450, y)
+      .text("Kredit", 550, y, {
+        width: 100,
+        align: "left",
+      })
+      .moveDown();
+  },
+  genTableDataAggre: (doc, y, data) => {
+    const date = data._id.tanggalJurnal.toString();
+    const formatDate = date.split("07:00:00");
+
+    doc
+      .fontSize(10)
+      .text(formatDate[0], 50, y)
+      .text(data._id.kodePerkiraan, 180, y)
+      .text(data._id.namaPerkiraan, 300, y)
+      .text(data.debet, 450, y)
+      .text(data.kredit, 550, y)
+      .moveDown();
+  },
+  genResultAggre: (doc, data) => {
     doc
       .fontSize(10)
       .text("Total Debet = ", 10, 470)
