@@ -43,8 +43,7 @@ module.exports = {
   getdatabykode: async (req, res) => {
     try {
       const id = req.params.nomerBukti;
-      console.log(id);
-      const data = await getByParams({ nomerBukti: id });
+      const data = await getByParams({ kodePerkiraan: id });
       if (data) return res.status(200).json(success200(data));
       return res.status(404).json(err404());
     } catch (error) {
