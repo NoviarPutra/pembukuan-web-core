@@ -111,4 +111,27 @@ module.exports = {
       .text(data.totalSaldo, 80, 510)
       .moveDown();
   },
+  
+  genTableRowTree: (doc, y) => {
+    doc
+      .fontSize(10)
+      .text("Kode Perkiraan", 180, y)
+      .text("Nama Perkiraan", 300, y)
+      .text("Debet", 450, y)
+      .text("Kredit", 550, y, {
+        width: 100,
+        align: "left",
+      })
+      .moveDown();
+  },
+  genTableDataTree: (doc, y, data) => {
+
+    doc
+      .fontSize(10)
+      .text(data._id.kodePerkiraan, 180, y)
+      .text(data._id.namaPerkiraan, 300, y)
+      .text(data.debet, 450, y)
+      .text(data.kredit, 550, y)
+      .moveDown();
+  },
 };

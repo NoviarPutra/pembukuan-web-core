@@ -43,7 +43,7 @@ module.exports = {
       genResult(document, {
         totalDebet: totalDebet,
         totalKredit: totalKredit,
-        totalSaldo: totalDebet - totalKredit,
+        Saldo: totalDebet - totalKredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -91,7 +91,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].totalDebet,
         totalKredit: total[0].totalKredit,
-        totalSaldo: total[0].totalDebet - total[0].totalKredit,
+        Saldo: total[0].totalDebet - total[0].totalKredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -147,7 +147,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].totalDebet,
         totalKredit: total[0].totalKredit,
-        totalSaldo: total[0].totalDebet - total[0].totalKredit,
+        Saldo: total[0].totalDebet - total[0].totalKredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -291,7 +291,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].totalDebet,
         totalKredit: total[0].totalKredit,
-        totalSaldo: total[0].totalDebet - total[0].totalKredit,
+        Saldo: total[0].totalDebet - total[0].totalKredit,
       });
 
       document.on("data", (data) => stream.write(data));

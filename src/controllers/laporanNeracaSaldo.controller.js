@@ -4,14 +4,14 @@ const { err404 } = require("../helpers/messages");
 const {
   genCommonHeader,
   genTitle,
-  genTableDataAggre,
-  genTableRowAggre,
+  genTableDataTree,
+  genTableRowTree,
   genResult,
 } = require("../helpers/pdf.service");
 const { Jurnal } = require("../models/schema");
 
 module.exports = {
-  getAllLabaRugi: async (req, res) => {
+  getAllNeracaSaldo: async (req, res) => {
     try {
       let y = 185;
       const document = new PDFDocument({
@@ -22,7 +22,7 @@ module.exports = {
       });
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: { kodePerkiraan: { $gte: "100", $lte: "799" } },
         },
         {
           $group: {
@@ -59,18 +59,18 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi");
-      genTableRowAggre(document, 160);
+      genTitle(document, "Laporan Neraca Saldo");
+      genTableRowTree(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
-        genTableDataAggre(document, y, resp[i]);
+        genTableDataTree(document, y, resp[i]);
         y += 20;
       }
 
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -100,7 +100,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-12-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -132,7 +132,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-12-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -150,18 +150,18 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi " + tahun);
-      genTableRowAggre(document, 160);
+      genTitle(document, "Laporan Neraca Saldo " + tahun);
+      genTableRowTree(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
-        genTableDataAggre(document, y, resp[i]);
+        genTableDataTree(document, y, resp[i]);
         y += 20;
       }
 
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -205,7 +205,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-${bulan}-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -237,7 +237,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-${bulan}-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -255,18 +255,18 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi " + month[bulan - 1] + " " + tahun);
-      genTableRowAggre(document, 160);
+      genTitle(document, "Laporan Neraca Saldo " + month[bulan - 1] + " " + tahun);
+      genTableRowTree(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
-        genTableDataAggre(document, y, resp[i]);
+        genTableDataTree(document, y, resp[i]);
         y += 20;
       }
 
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -307,7 +307,7 @@ module.exports = {
               {
                 tanggalJurnal: new Date(`${tahun}-${bulan}-${tanggal}`),
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -334,7 +334,7 @@ module.exports = {
           $match: {
             $and: [
               { tanggalJurnal: new Date(`${tahun}-${bulan}-${tanggal}`) },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "100", $lte: "799" } },
             ],
           },
         },
@@ -354,19 +354,19 @@ module.exports = {
       genCommonHeader(document, "PT. Lorem Ipsum");
       genTitle(
         document,
-        "Laporan Laba Rugi " + tanggal + " " + month[bulan - 1] + " " + tahun
+        "Laporan Neraca Saldo " + tanggal + " " + month[bulan - 1] + " " + tahun
       );
-      genTableRowAggre(document, 160);
+      genTableRowTree(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
-        genTableDataAggre(document, y, resp[i]);
+        genTableDataTree(document, y, resp[i]);
         y += 20;
       }
 
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
