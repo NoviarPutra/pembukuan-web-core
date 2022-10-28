@@ -9,10 +9,10 @@ const {
 const { authToken, aggregateDebetKredit } = require("../middlewares");
 const router = express.Router();
 
-router.get("/", [ aggregateDebetKredit], getAllLaporan);
+router.get("/", [aggregateDebetKredit], getAllLaporan);
+router.get("/perkiraan/:kode", [authToken], getAllByPerkiraan);
 router.get("/:tahun", [authToken], getAllByYear);
 router.get("/:tahun/:bulan", [authToken], getAllByMonth);
 router.get("/:tahun/:bulan/:tanggal", [authToken], getAllByDate);
-router.get("/perkiraan/:kode", [authToken], getAllByPerkiraan);
 
 module.exports = router;
