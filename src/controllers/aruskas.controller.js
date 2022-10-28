@@ -49,7 +49,7 @@ module.exports = {
         status: "OK",
         totalDebet: totalResp[0].totalDebet,
         totalKredit: totalResp[0].totalKredit,
-        saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
+        Saldo: totalResp[0].totalDebet - totalResp[0].totalKredit,
         data: resp
       });
     } catch (error) {
@@ -105,7 +105,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
@@ -162,7 +162,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
@@ -218,7 +218,7 @@ module.exports = {
         status: "OK",
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        totalSaldo: total[0].debet - total[0].kredit,
+        Saldo: total[0].debet - total[0].kredit,
         data: resp,
       });
     } catch (error) {
