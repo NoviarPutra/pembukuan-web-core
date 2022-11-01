@@ -4,9 +4,9 @@ const { err404 } = require("../helpers/messages");
 const {
   genCommonHeader,
   genTitle,
-  genTableDataAggre,
   genTableData,
   genTableRow,
+  genTableRowAggre,
   genResult,
 } = require("../helpers/pdf.service");
 const { Jurnal } = require("../models/schema");
