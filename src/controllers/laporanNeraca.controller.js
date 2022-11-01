@@ -11,7 +11,7 @@ const {
 const { Jurnal } = require("../models/schema");
 
 module.exports = {
-  getAllLabaRugi: async (req, res) => {
+  getAllNeraca: async (req, res) => {
     try {
       let y = 185;
       const document = new PDFDocument({
@@ -22,7 +22,7 @@ module.exports = {
       });
       const resp = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: { kodePerkiraan: { $gte: "500", $lte: "799" } },
         },
         {
           $group: {
@@ -43,7 +43,7 @@ module.exports = {
       }
       const total = await Jurnal.aggregate([
         {
-          $match: { kodePerkiraan: { $gte: "600", $lte: "799" } },
+          $match: { kodePerkiraan: { $gte: "500", $lte: "799" } },
         },
         {
           $group: {
@@ -59,7 +59,7 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi");
+      genTitle(document, "Laporan Neraca");
       genTableRowAggre(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
@@ -70,7 +70,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -100,7 +100,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-12-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -132,7 +132,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-12-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -150,7 +150,7 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi " + tahun);
+      genTitle(document, "Laporan Neraca " + tahun);
       genTableRowAggre(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
@@ -161,7 +161,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -205,7 +205,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-${bulan}-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -237,7 +237,7 @@ module.exports = {
                   $lte: new Date(`${tahun}-${bulan}-31`),
                 },
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -255,7 +255,7 @@ module.exports = {
       });
 
       genCommonHeader(document, "PT. Lorem Ipsum");
-      genTitle(document, "Laporan Laba Rugi " + month[bulan - 1] + " " + tahun);
+      genTitle(document, "Laporan Neraca " + month[bulan - 1] + " " + tahun);
       genTableRowAggre(document, 160);
 
       for (let i = 0; i < resp.length; i++) {
@@ -266,7 +266,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
@@ -307,7 +307,7 @@ module.exports = {
               {
                 tanggalJurnal: new Date(`${tahun}-${bulan}-${tanggal}`),
               },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -334,7 +334,7 @@ module.exports = {
           $match: {
             $and: [
               { tanggalJurnal: new Date(`${tahun}-${bulan}-${tanggal}`) },
-              { kodePerkiraan: { $gte: "600", $lte: "799" } },
+              { kodePerkiraan: { $gte: "500", $lte: "799" } },
             ],
           },
         },
@@ -354,7 +354,7 @@ module.exports = {
       genCommonHeader(document, "PT. Lorem Ipsum");
       genTitle(
         document,
-        "Laporan Laba Rugi " + tanggal + " " + month[bulan - 1] + " " + tahun
+        "Laporan Neraca " + tanggal + " " + month[bulan - 1] + " " + tahun
       );
       genTableRowAggre(document, 160);
 
@@ -366,7 +366,7 @@ module.exports = {
       genResult(document, {
         totalDebet: total[0].debet,
         totalKredit: total[0].kredit,
-        Saldo: total[0].debet - total[0].kredit,
+        totalSaldo: total[0].debet - total[0].kredit,
       });
 
       document.on("data", (data) => stream.write(data));
