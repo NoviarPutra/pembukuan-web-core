@@ -60,15 +60,24 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const { id } = req.params;
-      await updateBy({ _id: id }, req.body);
+      const upt = await updateBy({ _id: id }, req.body);
       const resp = await findBy({ _id: id });
-      const show = {
+      const { password, __v, ...other } = upt._doc;
+      // const { createdAt, ...newOther } = resp._doc;
+      const newData = {
         _id: resp._id,
         username: resp.username,
         email: resp.email,
         role: resp.role,
+        createdAt: resp.createdAt,
+        updatedAt: resp.updatedAt,
       };
-      return res.status(200).json(success200(show));
+      return res.status(200).json({
+        code: 200,
+        status: "OK",
+        oldData: { ...other },
+        data: newData,
+      });
     } catch (error) {
       console.log(error);
       return res.status(400).json(err400(error.codeName));
